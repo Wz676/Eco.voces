@@ -1,0 +1,21 @@
+# --- 网站核心配置 ---
+baseURL = "https://Wz676.github.io/Eco.voces/"
+languageCode = "es-VE"
+title = "Muro de reciclaje "
+theme = "blowfish"
+
+# --- 关键系统工程配置 ---
+# 这里指定生成的网页放入 docs 文件夹，以适配 GitHub Pages
+publishDir = "docs"
+
+# --- Blowfish 主题设置 ---
+[params]
+  colorScheme = "blowfish" 
+  defaultBackgroundImage = "img/background.jpg"
+
+[menu]
+  [[menu.main]]
+    identifier = "home"
+    name = "inicio"
+    url = "/"
+    weight = 1

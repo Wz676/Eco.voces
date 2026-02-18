@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on Muro de reciclaje </title>
+    <link>https://Wz676.github.io/Eco.voces/posts/</link>
+    <description>Recent content in Posts on Muro de reciclaje </description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>es-VE</language>
+    <copyright>© 2026 </copyright>
+    <lastBuildDate>Tue, 17 Feb 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://Wz676.github.io/Eco.voces/posts/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Bienvenido a mi Proyecto</title>
+      <link>https://Wz676.github.io/Eco.voces/posts/welcome/</link>
+      <pubDate>Tue, 17 Feb 2026 00:00:00 +0000</pubDate>
+      
+      <guid>https://Wz676.github.io/Eco.voces/posts/welcome/</guid>
+      <description>&lt;p&gt;Esta es la página de inicio de mi proyecto de ingeniería de sistemas.&lt;/p&gt;</description>
+      
+    </item>
+    
+  </channel>
+</rss>
