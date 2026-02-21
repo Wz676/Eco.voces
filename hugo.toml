@@ -15,7 +15,22 @@ publishDir = "docs"
 
 [menu]
   [[menu.main]]
-    identifier = "home"
-    name = "inicio"
+    identifier = "inicio"
+    name = "Inicio "
     url = "/"
     weight = 1
+  [[menu.main]]
+    identifier = "vision"
+    name = "Visión "
+    url = "#vision"  # 点击后网页会滑动到 id="vision" 的部分
+    weight = 2
+  [[menu.main]]
+    identifier = "video"
+    name = "video "
+    url = "#video"
+    weight = 3
+  [[menu.main]]
+    identifier = "interact"
+    name = "interact "
+    url = "#interact"
+    weight = 4

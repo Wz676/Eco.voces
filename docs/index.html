@@ -38,13 +38,15 @@
   
   <meta property="og:url" content="https://Wz676.github.io/Eco.voces/">
   <meta property="og:site_name" content="Muro de reciclaje ">
-  <meta property="og:title" content="Muro de reciclaje ">
+  <meta property="og:title" content="Eco.Voces">
+  <meta property="og:description" content="Aquí comienza nuestro viaje ecológico… (当用户往下滑动时，就会看到这里的文字和后续的内容)">
   <meta property="og:locale" content="es_VE">
   <meta property="og:type" content="website">
 
   
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Muro de reciclaje ">
+  <meta name="twitter:title" content="Eco.Voces">
+  <meta name="twitter:description" content="Aquí comienza nuestro viaje ecológico… (当用户往下滑动时，就会看到这里的文字和后续的内容)">
 
   
   
@@ -278,12 +280,66 @@
       href="/Eco.voces/"
       
       class="flex items-center bf-icon-color-hover"
-      aria-label="inicio"
+      aria-label="Inicio "
       title="">
       
       
         <span class="text-base font-medium break-normal">
-          inicio
+          Inicio
+        </span>
+      
+    </a>
+  
+
+    
+      
+  
+    <a
+      href="#vision"
+      
+      class="flex items-center bf-icon-color-hover"
+      aria-label="Visión "
+      title="">
+      
+      
+        <span class="text-base font-medium break-normal">
+          Visión
+        </span>
+      
+    </a>
+  
+
+    
+      
+  
+    <a
+      href="#video"
+      
+      class="flex items-center bf-icon-color-hover"
+      aria-label="video "
+      title="">
+      
+      
+        <span class="text-base font-medium break-normal">
+          video
+        </span>
+      
+    </a>
+  
+
+    
+      
+  
+    <a
+      href="#interact"
+      
+      class="flex items-center bf-icon-color-hover"
+      aria-label="interact "
+      title="">
+      
+      
+        <span class="text-base font-medium break-normal">
+          interact
         </span>
       
     </a>
@@ -386,12 +442,63 @@
     <div class="px-2">
       <a
         href="/Eco.voces/"
-        aria-label="inicio"
+        aria-label="Inicio "
         
         class="flex items-center gap-4 group bf-icon-color-hover text-neutral-700 dark:text-neutral-200">
         
         <span title="" class="text-2xl font-bold tracking-tight">
-          inicio
+          Inicio
+        </span>
+        
+      </a>
+
+      
+    </div>
+  
+    
+    <div class="px-2">
+      <a
+        href="#vision"
+        aria-label="Visión "
+        
+        class="flex items-center gap-4 group bf-icon-color-hover text-neutral-700 dark:text-neutral-200">
+        
+        <span title="" class="text-2xl font-bold tracking-tight">
+          Visión
+        </span>
+        
+      </a>
+
+      
+    </div>
+  
+    
+    <div class="px-2">
+      <a
+        href="#video"
+        aria-label="video "
+        
+        class="flex items-center gap-4 group bf-icon-color-hover text-neutral-700 dark:text-neutral-200">
+        
+        <span title="" class="text-2xl font-bold tracking-tight">
+          video
+        </span>
+        
+      </a>
+
+      
+    </div>
+  
+    
+    <div class="px-2">
+      <a
+        href="#interact"
+        aria-label="interact "
+        
+        class="flex items-center gap-4 group bf-icon-color-hover text-neutral-700 dark:text-neutral-200">
+        
+        <span title="" class="text-2xl font-bold tracking-tight">
+          interact
         </span>
         
       </a>
@@ -429,34 +536,72 @@
     <div class="relative flex flex-col grow">
       <main id="main-content" class="grow">
         
-  
-  
+  <article class="max-w-full">
+    <header>
+      
+      <h1 class="mt-0 text-4xl font-extrabold text-neutral-900 dark:text-neutral">
+        Eco.Voces
+      </h1>
+    </header>
+    <section class="max-w-full mt-6 prose dark:prose-invert">
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+<style>
+   
+  .swiper { width: 100%; height: 50vh; border-radius: 15px; margin-bottom: 2rem; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+  .swiper-slide { background: #000; display: flex; justify-content: center; align-items: center; position: relative; overflow: hidden;}
+   
+  .swiper-slide img, .swiper-slide video { display: block; width: 100%; height: 100%; object-fit: cover; }
+</style>
+
+<div class="swiper mySwiper">
+  <div class="swiper-wrapper">
     
-<article
-  class="
-    h-full
-   flex flex-col items-center justify-center text-center">
-  <header class="relative px-1 py-1 flex flex-col items-center mb-3">
+      <div class="swiper-slide">
+        
+          <img src="media/001.png" alt="Contenido Ecológico" />
+        
+      </div>
     
-    <h1 class="text-4xl font-extrabold">
-      Muro de reciclaje 
-    </h1>
+      <div class="swiper-slide">
+        
+          <img src="media/002.png" alt="Contenido Ecológico" />
+        
+      </div>
     
-    <div class="mt-1 text-2xl">
+      <div class="swiper-slide">
+        
+          <img src="media/003.png" alt="Contenido Ecológico" />
+        
+      </div>
+    
+  </div>
+  <div class="swiper-pagination"></div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var swiper = new Swiper(".mySwiper", {
+      effect: "slide",
+      grabCursor: true,
+      centeredSlides: true,
+      slidesPerView: "auto",
+      autoplay: { delay: 4000, disableOnInteraction: false },
+      pagination: { el: ".swiper-pagination", clickable: true },
+    });
+  });
+</script>
+<!-- raw HTML omitted -->
+<p>Aquí comienza nuestro viaje ecológico&hellip;
+(当用户往下滑动时，就会看到这里的文字和后续的内容)</p>
+
+    </section>
+    <footer class="pt-8">
       
 
-    </div>
-  </header>
-  <section class="prose dark:prose-invert w-full"></section>
-</article>
-<section>
-  
-
-
-
-</section>
-
-  
+    </footer>
+  </article>
 
         
 

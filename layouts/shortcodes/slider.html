@@ -1,0 +1,38 @@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+<style>
+  /* 50vh 确保了刚好占据屏幕一半高度 */
+  .swiper { width: 100%; height: 50vh; border-radius: 15px; margin-bottom: 2rem; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+  .swiper-slide { background: #000; display: flex; justify-content: center; align-items: center; position: relative; overflow: hidden;}
+  /* 确保图片和视频都能完美填充且不变形 */
+  .swiper-slide img, .swiper-slide video { display: block; width: 100%; height: 100%; object-fit: cover; }
+</style>
+
+<div class="swiper mySwiper">
+  <div class="swiper-wrapper">
+    {{ range split (.Get "media") "," }}
+      <div class="swiper-slide">
+        {{ if in . ".mp4" }}
+          <video src="{{ . }}" autoplay loop muted playsinline></video>
+        {{ else }}
+          <img src="{{ . }}" alt="Contenido Ecológico" />
+        {{ end }}
+      </div>
+    {{ end }}
+  </div>
+  <div class="swiper-pagination"></div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var swiper = new Swiper(".mySwiper", {
+      effect: "slide",
+      grabCursor: true,
+      centeredSlides: true,
+      slidesPerView: "auto",
+      autoplay: { delay: 4000, disableOnInteraction: false },
+      pagination: { el: ".swiper-pagination", clickable: true },
+    });
+  });
+</script>
