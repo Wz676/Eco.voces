@@ -20,9 +20,9 @@ publishDir = "docs"
     url = "/"
     weight = 1
   [[menu.main]]
-    identifier = "vision"
-    name = "Visión "
-    url = "#vision"  # 点击后网页会滑动到 id="vision" 的部分
+    identifier = "descripcion"
+    name = "Descripción"
+    url = "/#descripcion"  # 点击后网页会滑动到 id="descripcion" 的部分
     weight = 2
   [[menu.main]]
     identifier = "video"
@@ -34,3 +34,20 @@ publishDir = "docs"
     name = "interact "
     url = "#interact"
     weight = 4
+
+
+
+
+
+
+
+
+
+
+
+
+
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true

@@ -1,0 +1,22 @@
+<style>
+    .eco-story { display: flex; flex-wrap: wrap; align-items: center; margin: 3rem 0; gap: 3rem; }
+    /* 图片区域：占据一半空间，带有精美圆角和阴影 */
+    .eco-story-img { flex: 1 1 300px; border-radius: 15px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.15); }
+    .eco-story-img img { width: 100%; height: auto; display: block; object-fit: cover; transition: transform 0.3s ease; }
+    .eco-story-img img:hover { transform: scale(1.05); } /* 鼠标悬停时微微放大 */
+    
+    /* 文字区域：占据另一半空间 */
+    .eco-story-text { flex: 1 1 300px; text-align: left; }
+    .eco-story-text h3 { margin-top: 0; font-size: 2rem; margin-bottom: 1rem; }
+    .eco-story-text p { font-size: 1.1rem; line-height: 1.8; opacity: 0.8; }
+  </style>
+  
+  <div class="eco-story" {{ if eq (.Get "reverse") "true" }}style="flex-direction: row-reverse;"{{ end }}>
+    <div class="eco-story-text">
+      <h3>{{ .Get "title" }}</h3>
+      <p>{{ .Inner }}</p> 
+    </div>
+    <div class="eco-story-img">
+      <img src="{{ .Get "media" | relURL }}" alt="descripcion" />
+    </div>
+  </div>
