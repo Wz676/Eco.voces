@@ -20,3 +20,17 @@ No solo hablamos de ecología; aplicamos el pensamiento estructurado para resolv
 {{< /description >}}
 
 </div>
+
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+  // 稍微延迟 0.1 秒启动，确保前面的图文和背景已经完全加载
+  setTimeout(function() {
+      AOS.init({
+        duration: 1000,       // 动画持续 1 秒，极其丝滑
+        easing: 'ease-out-cubic',
+        once: true,           // 只在第一次滑到时执行
+        offset: 80            // 距离屏幕底部 80px 时精准触发
+      });
+  }, 100); 
+</script>

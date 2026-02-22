@@ -1,0 +1,60 @@
+/* =========================================
+   Tema: Bosque Nublado (云雾林生态主题)
+   ========================================= */
+
+/* 1. ☀️ 浅色模式：清晨的森林薄雾 (浅绿过渡到柔和的珍珠白) */
+:root {
+    --color-bg-gradient: linear-gradient(135deg, #eaf5f0 0%, #f4fbf8 50%, #ffffff 100%);
+  }
+  
+  /* 2. 🌙 深色模式：深邃的午夜雨林 (深青色过渡到暗夜黑) */
+  .dark {
+    --color-bg-gradient: linear-gradient(135deg, #0d1f18 0%, #132a22 50%, #0a120e 100%);
+  }
+  
+ /* =========================================
+   3. 赋予物理层次感 + 有机流体弧线 (生态涟漪版)
+   ========================================= */
+
+/* 🟢 第一步：定义名为 "ecobreathe" 的关键帧动画引擎 */
+@keyframes ecobreathe {
+    0% {
+      /* 初始位置 */
+      background-position: 0% 0%, 100% 100%, 0% 50%;
+    }
+    50% {
+      /* 运行到一半时：让弧线轻轻偏移 30px，同时让底色的渐变产生流动感 */
+      background-position: 30px 30px, calc(100% - 30px) calc(100% - 30px), 100% 50%;
+    }
+    100% {
+      /* 回到原点，形成完美的闭环，肉眼看不出卡顿 */
+      background-position: 0% 0%, 100% 100%, 0% 50%;
+    }
+  }
+  
+  body {
+    /* 背景图保持你之前选定的优美流体涟漪和渐变 */
+    background-image: 
+      repeating-radial-gradient(circle at 0% 0%, transparent 0, transparent 40px, rgba(0, 0, 0, 0.03) 40px, rgba(0, 0, 0, 0.03) 41px),
+      repeating-radial-gradient(circle at 100% 100%, transparent 0, transparent 60px, rgba(0, 0, 0, 0.02) 60px, rgba(0, 0, 0, 0.02) 61px),
+      var(--color-bg-gradient) !important;
+    
+    /* ⚠️ 核心修改 1：把背景尺寸放大到 200%，给“移动”留出充足的空间 */
+    background-size: 150% 150%, 150% 150%, 200% 200% !important;
+    background-attachment: fixed, fixed, fixed !important; 
+    
+    /* ⚠️ 核心修改 2：将刚刚写好的动画引擎绑定到 body 上
+       20s: 极其缓慢的 20 秒循环一次
+       ease-in-out: 加速起步，减速停止（丝滑的呼吸感）
+       infinite: 永远循环下去 */
+    animation: ecobreathe 20s ease-in-out infinite !important;
+  }
+  
+  
+/* 🌙 深色模式下的弧线保持原样，它会自动继承上面的动画引擎 */
+.dark body {
+    background-image: 
+      repeating-radial-gradient(circle at 0% 0%, transparent 0, transparent 40px, rgba(255, 255, 255, 0.04) 40px, rgba(255, 255, 255, 0.04) 41px),
+      repeating-radial-gradient(circle at 100% 100%, transparent 0, transparent 60px, rgba(255, 255, 255, 0.02) 60px, rgba(255, 255, 255, 0.02) 61px),
+      var(--color-bg-gradient) !important;
+  }

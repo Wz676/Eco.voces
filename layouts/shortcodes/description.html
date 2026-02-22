@@ -11,7 +11,7 @@
     .eco-story-text p { font-size: 1.1rem; line-height: 1.8; opacity: 0.8; }
   </style>
   
-  <div class="eco-story" {{ if eq (.Get "reverse") "true" }}style="flex-direction: row-reverse;"{{ end }}>
+  <div class="eco-story" data-aos="fade-up" {{ if eq (.Get "reverse") "true" }}style="flex-direction: row-reverse;"{{ end }}>
     <div class="eco-story-text">
       <h3>{{ .Get "title" }}</h3>
       <p>{{ .Inner }}</p> 

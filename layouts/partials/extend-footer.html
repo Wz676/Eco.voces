@@ -1,0 +1,11 @@
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    AOS.init({
+      duration: 800,       // 动画持续时间（800毫秒，非常优雅的速度）
+      easing: 'ease-out-cubic', // 丝滑的减速效果
+      once: true,          // true 表示只在第一次滑到时执行动画，不会反复闪烁
+      offset: 50           // 距离模块 50px 时触发动画
+    });
+  });
+</script>
