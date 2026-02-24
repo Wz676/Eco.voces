@@ -21,6 +21,15 @@ No solo hablamos de ecología; aplicamos el pensamiento estructurado para resolv
 
 </div>
 
+
+<div style="max-width: 1200px; margin: 0 auto; padding: 0 20px; margin-bottom: 5rem;">
+
+<h2 id="video" style="text-align: center; margin-top: 5rem; margin-bottom: 2rem; font-size: 2.5rem;">Galería Multimedia</h2>
+
+{{< youtubegallery ids="MkRZGat1hks,K15rvmw2WwI,IPFokO5aTAk" >}}
+
+</div>
+
 <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 <script>

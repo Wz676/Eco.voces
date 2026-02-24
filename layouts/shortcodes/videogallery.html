@@ -1,0 +1,79 @@
+<style>
+    /* 容器：限制高度，节省空间 */
+    .video-gallery-container {
+      width: 100%;
+      padding: 20px 0 40px 0; /* 底部留出空间给进度点 */
+    }
+  
+    /* 视频卡片：圆角、阴影、防溢出 */
+    .video-card {
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+      background: #000; /* 视频未加载时的黑底 */
+      transition: transform 0.3s ease;
+    }
+    
+    /* 鼠标悬停时微微浮起，增加交互感 */
+    .video-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.25);
+    }
+  
+    /* 视频本身：强制铺满卡片 */
+    .video-card video {
+      width: 100%;
+      height: 100%; /* 自适应高度 */
+      object-fit: cover;
+      display: block;
+      aspect-ratio: 16 / 9; /* 强制保持 16:9 的电影比例 */
+    }
+  
+    /* 自定义分页点的颜色，匹配你的环保主题 */
+    .swiper-pagination-bullet-active {
+      background: #10b981 !important; /* 翠绿色 */
+    }
+  </style>
+  
+  <div class="swiper videoSwiper video-gallery-container" data-aos="fade-up">
+    <div class="swiper-wrapper">
+      {{ range split (.Get "files") "," }}
+        <div class="swiper-slide video-card">
+          <video controls preload="metadata" playsinline>
+            <source src="{{ . | relURL }}" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+      {{ end }}
+    </div>
+    <div class="swiper-pagination"></div>
+    <div class="swiper-button-next" style="color: #fff; text-shadow: 0 0 10px rgba(0,0,0,0.5);"></div>
+    <div class="swiper-button-prev" style="color: #fff; text-shadow: 0 0 10px rgba(0,0,0,0.5);"></div>
+  </div>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var videoSwiper = new Swiper(".videoSwiper", {
+        slidesPerView: 1.2,   // 📱 手机模式：显示 1 个完整视频 + 0.2 个下一个视频（暗示可滑动）
+        spaceBetween: 20,     // 卡片之间的间距
+        centeredSlides: false, // 不需要居中，从左开始排列
+        grabCursor: true,      // 鼠标放上去变成抓手形状
+        pagination: {
+          el: ".swiper-pagination",
+          clickable: true,
+        },
+        navigation: {
+          nextEl: ".swiper-button-next",
+          prevEl: ".swiper-button-prev",
+        },
+        breakpoints: {
+          640: {
+            slidesPerView: 2.2, // 平板显示 2 个多
+          },
+          1024: {
+            slidesPerView: 3.2, // 💻 电脑显示 3 个多（横向铺开，非常节省垂直空间）
+          },
+        },
+      });
+    });
+  </script>

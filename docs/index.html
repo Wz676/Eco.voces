@@ -317,15 +317,15 @@
       
   
     <a
-      href="#video"
+      href="/Eco.voces/#video"
       
       class="flex items-center bf-icon-color-hover"
-      aria-label="video "
+      aria-label="vídeo "
       title="">
       
       
         <span class="text-base font-medium break-normal">
-          video
+          vídeo
         </span>
       
     </a>
@@ -479,13 +479,13 @@
     
     <div class="px-2">
       <a
-        href="#video"
-        aria-label="video "
+        href="/Eco.voces/#video"
+        aria-label="vídeo "
         
         class="flex items-center gap-4 group bf-icon-color-hover text-neutral-700 dark:text-neutral-200">
         
         <span title="" class="text-2xl font-bold tracking-tight">
-          video
+          vídeo
         </span>
         
       </a>
@@ -647,6 +647,110 @@ No solo hablamos de ecología; aplicamos el pensamiento estructurado para resolv
       <img src="/Eco.voces/media/002.png" alt="descripcion" />
     </div>
   </div>
+</div>
+<div style="max-width: 1200px; margin: 0 auto; padding: 0 20px; margin-bottom: 5rem;">
+<h2 id="video" style="text-align: center; margin-top: 5rem; margin-bottom: 2rem; font-size: 2.5rem;">Galería Multimedia</h2>
+<style>
+     
+    .yt-gallery-container {
+      width: 100%;
+      padding: 20px 0 50px 0;  
+    }
+  
+     
+    .yt-card {
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+      background: #000;
+       
+      aspect-ratio: 16 / 9;
+      transition: transform 0.3s ease;
+    }
+    
+    .yt-card:hover {
+      transform: translateY(-5px);  
+      box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+    }
+  
+     
+    .yt-card iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+  </style>
+  
+  <div class="swiper ytSwiper yt-gallery-container" data-aos="fade-up">
+    <div class="swiper-wrapper">
+      
+        <div class="swiper-slide yt-card">
+          <iframe 
+            src="https://www.youtube.com/embed/MkRZGat1hks" 
+            title="YouTube video player" 
+            frameborder="0" 
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+            allowfullscreen>
+          </iframe>
+        </div>
+      
+        <div class="swiper-slide yt-card">
+          <iframe 
+            src="https://www.youtube.com/embed/K15rvmw2WwI" 
+            title="YouTube video player" 
+            frameborder="0" 
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+            allowfullscreen>
+          </iframe>
+        </div>
+      
+        <div class="swiper-slide yt-card">
+          <iframe 
+            src="https://www.youtube.com/embed/IPFokO5aTAk" 
+            title="YouTube video player" 
+            frameborder="0" 
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+            allowfullscreen>
+          </iframe>
+        </div>
+      
+    </div>
+    
+    <div class="swiper-pagination"></div>
+    <div class="swiper-button-next" style="color: #fff; text-shadow: 0 0 5px #000;"></div>
+    <div class="swiper-button-prev" style="color: #fff; text-shadow: 0 0 5px #000;"></div>
+  </div>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var ytSwiper = new Swiper(".ytSwiper", {
+        
+        slidesPerView: 1.1,
+        spaceBetween: 20,
+        grabCursor: true,
+        
+        
+        pagination: {
+          el: ".swiper-pagination",
+          clickable: true,
+        },
+        
+        navigation: {
+          nextEl: ".swiper-button-next",
+          prevEl: ".swiper-button-prev",
+        },
+        
+        breakpoints: {
+          640: {
+            slidesPerView: 2.1, 
+          },
+          1024: {
+            slidesPerView: 3.1, 
+          },
+        },
+      });
+    });
+  </script>
 </div>
 <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>

@@ -1,0 +1,81 @@
+<style>
+    /* 1. 滑动容器 */
+    .yt-gallery-container {
+      width: 100%;
+      padding: 20px 0 50px 0; /* 底部留空间给分页点 */
+    }
+  
+    /* 2. 单个卡片包装 */
+    .yt-card {
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+      background: #000;
+      /* 保持 16:9 的黄金比例，防止播放器变形 */
+      aspect-ratio: 16 / 9;
+      transition: transform 0.3s ease;
+    }
+    
+    .yt-card:hover {
+      transform: translateY(-5px); /* 悬浮效果 */
+      box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+    }
+  
+    /* 3. YouTube iframe 强制填满卡片 */
+    .yt-card iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+  </style>
+  
+  <div class="swiper ytSwiper yt-gallery-container" data-aos="fade-up">
+    <div class="swiper-wrapper">
+      {{ range split (.Get "ids") "," }}
+        <div class="swiper-slide yt-card">
+          <iframe 
+            src="https://www.youtube.com/embed/{{ . }}" 
+            title="YouTube video player" 
+            frameborder="0" 
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+            allowfullscreen>
+          </iframe>
+        </div>
+      {{ end }}
+    </div>
+    
+    <div class="swiper-pagination"></div>
+    <div class="swiper-button-next" style="color: #fff; text-shadow: 0 0 5px #000;"></div>
+    <div class="swiper-button-prev" style="color: #fff; text-shadow: 0 0 5px #000;"></div>
+  </div>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var ytSwiper = new Swiper(".ytSwiper", {
+        // 📱 手机端：显示 1.1 个，暗示可以滑动
+        slidesPerView: 1.1,
+        spaceBetween: 20,
+        grabCursor: true,
+        
+        // 分页器
+        pagination: {
+          el: ".swiper-pagination",
+          clickable: true,
+        },
+        // 左右箭头
+        navigation: {
+          nextEl: ".swiper-button-next",
+          prevEl: ".swiper-button-prev",
+        },
+        // 响应式断点
+        breakpoints: {
+          640: {
+            slidesPerView: 2.1, // 平板
+          },
+          1024: {
+            slidesPerView: 3.1, // 💻 电脑端：横向显示3个，非常节省垂直空间
+          },
+        },
+      });
+    });
+  </script>

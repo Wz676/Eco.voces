@@ -26,8 +26,8 @@ publishDir = "docs"
     weight = 2
   [[menu.main]]
     identifier = "video"
-    name = "video "
-    url = "#video"
+    name = "vídeo "
+    url = "/#video"
     weight = 3
   [[menu.main]]
     identifier = "interact"
