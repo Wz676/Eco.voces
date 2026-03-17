@@ -1,15 +1,16 @@
 /* =========================================
-   Tema: Bosque Nublado (云雾林生态主题)
+   1. 全局色彩变量 (控制环境底色)
    ========================================= */
 
-/* 1. ☀️ 浅色模式：清晨的森林薄雾 (浅绿过渡到柔和的珍珠白) */
+/* ☀️ 浅色模式：极其微妙的“晨雾绿” (比纯白深一点点，透出极浅的生机) */
 :root {
-    --color-bg-gradient: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%) !important;
-  }
-  
-  /* 2. 🌙 深色模式：深邃的午夜雨林 (深青色过渡到暗夜黑) */
-  .dark {
-    --color-bg-gradient: linear-gradient(135deg, #0f172a 0%, #064e3b 100%) !important;
+  /* 从几乎纯白透绿(#f8fdf9) 渐变到 极其柔和的浅灰绿(#e2f1e8) */
+  --color-bg-gradient: linear-gradient(135deg, #e9faeb 0%, #def1e6 100%) !important;
+}
+
+/* 🌙 深色模式：保持深邃不动 */
+.dark {
+  --color-bg-gradient: linear-gradient(135deg, #0f172a 0%, #064e3b 100%) !important;
 }
   
 /* =========================================
