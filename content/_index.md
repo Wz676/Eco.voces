@@ -30,6 +30,11 @@ No solo hablamos de ecología; aplicamos el pensamiento estructurado para resolv
 
 </div>
 
+<div style="max-width: 1200px; margin: 0 auto; padding: 0 20px; margin-bottom: 6rem;">
+  <div id="comentarios" style="position: relative; top: -100px;"></div>
+  {{< messageboard >}}
+</div>
+
 <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 <script>

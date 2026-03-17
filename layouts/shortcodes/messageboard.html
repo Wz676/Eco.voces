@@ -1,0 +1,206 @@
+<style>
+  /* 留言墙主容器 */
+  .wall-container {
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 30px;
+    margin-top: 50px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  }
+  
+  /* 🌙 深色模式：主容器变暗 */
+  .dark .wall-container {
+    background: rgba(0, 0, 0, 0.4);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  /* ==================== 1. 输入区域与文本修复 ==================== */
+  .input-area {
+    display: flex; gap: 10px; margin-bottom: 30px; flex-wrap: wrap;
+  }
+  
+  .input-area input, .input-area textarea {
+    border: 1px solid rgba(0,0,0,0.1);
+    padding: 15px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.9);
+    color: #1f2937 !important; /* 💡 浅色模式：强制深灰黑字体，绝对清晰 */
+    font-family: inherit;
+    outline: none;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+  }
+  .input-name { flex: 1; min-width: 100px; }
+  .input-content { flex: 3; min-width: 200px; }
+  
+  /* 🌙 深色模式：输入框底色变黑，字体变白 */
+  .dark .input-area input, .dark .input-area textarea {
+    background: rgba(17, 24, 39, 0.8); /* 深邃的黑灰色 */
+    color: #f3f4f6 !important; /* 强制浅灰白字体 */
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  /* ==================== 2. 发送按钮高对比度设计 ==================== */
+  .send-btn {
+    background: #10b981; /* 💡 强制使用鲜艳的翠绿色 (不依赖主题变量) */
+    color: #ffffff !important; /* 纯白文字 */
+    border: none;
+    padding: 0 25px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1.05rem;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2); /* 加上文字阴影，凸显立体感 */
+    transition: all 0.2s;
+    box-shadow: 0 4px 6px rgba(16, 185, 129, 0.3); /* 绿色发光投影 */
+  }
+  .send-btn:hover { 
+    transform: scale(1.05); 
+    background: #059669; /* 鼠标悬停时变成深绿色 */
+  }
+
+  /* ==================== 3. 加载文字与气泡卡片修复 ==================== */
+  .loading-spinner {
+    text-align: center; padding: 20px; font-size: 1.2rem;
+    color: #374151; font-weight: bold; /* 浅色模式深灰 */
+  }
+  .dark .loading-spinner { color: #d1d5db; } /* 深色模式浅灰 */
+
+  .bubble-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px;
+  }
+
+  .bubble-card {
+    background: white;
+    color: #1f2937; /* 强制深色文字 */
+    padding: 20px;
+    border-radius: 20px;
+    border-bottom-left-radius: 2px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+
+  /* 🌙 深色模式：气泡卡片变成深灰蓝，文字变亮 */
+  .dark .bubble-card {
+    background: rgba(30, 41, 59, 0.9);
+    color: #f8fafc;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  }
+
+  .bubble-card:nth-child(3n+1) { border-top: 5px solid #10b981; }
+  .bubble-card:nth-child(3n+2) { border-top: 5px solid #3b82f6; }
+  .bubble-card:nth-child(3n+3) { border-top: 5px solid #f59e0b; }
+
+  .bubble-header { font-size: 0.9rem; color: #6b7280; margin-bottom: 10px; font-weight: bold; display: flex; justify-content: space-between; }
+  .dark .bubble-header { color: #9ca3af; }
+  
+  .bubble-content { font-size: 1.1rem; line-height: 1.5; word-wrap: break-word; }
+
+  @keyframes popIn {
+    from { opacity: 0; transform: scale(0.8) translateY(20px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+</style>
+  
+  <div class="wall-container" id="message-wall" data-aos="fade-up">
+    <h2 style="text-align: center; margin-bottom: 2rem;">💬 Eco.Comentarios</h2>
+    
+    <div class="input-area">
+      <input type="text" id="msg-name" class="input-name" placeholder="Tu Nombre" />
+      <textarea id="msg-content" class="input-content" rows="1" placeholder="Escribe tu idea aquí..."></textarea>
+      <button class="send-btn" onclick="postMessage()">Enviar</button>
+    </div>
+  
+    <div id="bubble-grid" class="bubble-grid">
+      <div class="loading-spinner">Cargando pensamientos... 🍃</div>
+    </div>
+  </div>
+  
+  <script>
+    // ⚠️ 把这里替换成你刚才部署得到的 API URL
+    const API_URL = "https://script.google.com/macros/s/AKfycbzBUjZECEBo0z6YhfUS5ZCeojUlVGKPVfodA-HU3yEy8MO6vGU_ywNZk_45roKA1IvE/exec";
+  
+    // 1. 获取留言
+    async function fetchMessages() {
+      try {
+        const response = await fetch(API_URL);
+        const data = await response.json();
+        renderBubbles(data);
+      } catch (error) {
+        console.error('Error:', error);
+        document.getElementById('bubble-grid').innerHTML = '<p style="text-align:center">Error de conexión 🌱</p>';
+      }
+    }
+  
+    // 2. 渲染气泡
+    function renderBubbles(messages) {
+      const grid = document.getElementById('bubble-grid');
+      grid.innerHTML = ''; // 清空加载动画
+      
+      messages.forEach(msg => {
+        // 简单的日期格式化
+        const date = new Date(msg.timestamp).toLocaleDateString();
+        
+        const card = document.createElement('div');
+        card.className = 'bubble-card';
+        card.innerHTML = `
+          <div class="bubble-header">
+            <span>@${msg.name}</span>
+            <span style="font-weight:normal; opacity:0.6; font-size:0.8rem">${date}</span>
+          </div>
+          <div class="bubble-content">${msg.content}</div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+  
+    // 3. 发送留言
+    async function postMessage() {
+      const nameInput = document.getElementById('msg-name');
+      const contentInput = document.getElementById('msg-content');
+      const btn = document.querySelector('.send-btn');
+      
+      if (!nameInput.value || !contentInput.value) {
+        alert("Por favor escribe tu nombre y mensaje 📝");
+        return;
+      }
+  
+      // 按钮变状态防止重复点击
+      const originalText = btn.innerText;
+      btn.innerText = "Enviando...";
+      btn.disabled = true;
+  
+      const payload = {
+        name: nameInput.value,
+        content: contentInput.value
+      };
+  
+      try {
+        // 发送 POST 请求
+        await fetch(API_URL, {
+          method: 'POST',
+          mode: 'no-cors', // 关键：解决跨域问题
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+  
+        // 清空输入框并重新加载列表
+        nameInput.value = '';
+        contentInput.value = '';
+        btn.innerText = "¡Enviado! ✨";
+        setTimeout(() => { btn.innerText = originalText; btn.disabled = false; }, 2000);
+        
+        // 稍微等一下再刷新，让 Google Sheet 反应过来
+        setTimeout(fetchMessages, 1000);
+  
+      } catch (error) {
+        console.error('Error:', error);
+        alert("Error al enviar message");
+        btn.innerText = originalText;
+        btn.disabled = false;
+      }
+    }
+  
+    // 页面加载完成后自动获取一次
+    document.addEventListener('DOMContentLoaded', fetchMessages);
+  </script>
