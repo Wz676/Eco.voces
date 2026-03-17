@@ -5,6 +5,9 @@ layout: "simple"
 
 {{< slider media="media/001.png,media/002.png,media/003.png" >}}
 
+
+{{< quicknav >}}
+
 <h2 id="vision" style="text-align: center; margin-top: 2rem;"></h2>
 
 <div style="max-width: 1000px; margin: 0 auto; padding: 0 20px;"> 

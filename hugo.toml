@@ -30,11 +30,20 @@ publishDir = "docs"
     url = "/#video"
     weight = 3
   [[menu.main]]
-    identifier = "interact"
-    name = "interact "
-    url = "#interact"
+    identifier = "Comentarios"
+    name = "Comentarios "
+    url = "/#comentarios"
     weight = 4
-
+  [[menu.main]]
+    identifier = "interactuar"
+    name = "Interactuar "
+    url = "/interactuar/"
+    weight = 5
+  [[menu.main]]
+    identifier = "informacion"
+    name = "Más informacion "
+    url = "/informacion/"
+    weight = 6
 
 
 

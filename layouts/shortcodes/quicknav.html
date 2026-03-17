@@ -1,0 +1,89 @@
+<style>
+    .quick-nav-container {
+      max-width: 1000px;
+      margin: 30px auto 50px auto; /* 负 margin 让它微微向上重叠在轮播图底部，增加层次感 */
+      padding: 0 20px;
+      position: relative;
+      z-index: 10; /* 确保它在最上层可点击 */
+    }
+  
+    .quick-nav-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr); /* 电脑端 4 列 */
+      gap: 20px;
+    }
+  
+    .nav-btn {
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      border-radius: 15px;
+      padding: 20px 10px;
+      text-align: center;
+      text-decoration: none !important;
+      color: #1f2937;
+      font-weight: bold;
+      font-size: 1.1rem;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+  
+    .nav-btn:hover {
+      transform: translateY(-5px);
+      background: #10b981; /* 悬浮时变绿 */
+      color: white;
+      border-color: #10b981;
+      box-shadow: 0 15px 30px rgba(16, 185, 129, 0.3);
+    }
+  
+    .nav-icon {
+      font-size: 2rem;
+    }
+  
+    /* 🌙 深色模式适配 */
+    .dark .nav-btn {
+      background: rgba(30, 41, 59, 0.7);
+      border-color: rgba(255, 255, 255, 0.1);
+      color: #f3f4f6;
+    }
+    .dark .nav-btn:hover {
+      background: #10b981;
+      color: white;
+    }
+  
+    /* 📱 手机端适配：变成 2列 x 2行 */
+    @media (max-width: 768px) {
+      .quick-nav-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  </style>
+  
+  <div class="quick-nav-container" data-aos="fade-up" data-aos-delay="200">
+    <div class="quick-nav-grid">
+      <a href="{{ "#video" | relURL }}" class="nav-btn" style="border: 2px solid #10b981;">
+        <span class="nav-icon">🎬</span>
+        <span>Videos</span>
+      </a>
+      
+      <a href="{{ "#comentarios" | relURL }}" class="nav-btn" style="border: 2px solid #10b981;">
+        <span class="nav-icon">💬</span>
+        <span>Comentarios</span>
+      </a>
+      
+      <a href="{{ "interactuar/" | relURL }}" class="nav-btn" style="border: 2px solid #10b981;">
+        <span class="nav-icon">🎮</span>
+        <span>Interactuar</span>
+      </a>
+
+      <a href="{{ "informacion/" | relURL }}" class="nav-btn" style="border: 2px solid #10b981;">
+        <span class="nav-icon">ℹ️</span>
+        <span>Mas Información</span>
+      </a>
+    </div>
+  </div>

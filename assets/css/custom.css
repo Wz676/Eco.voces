@@ -4,13 +4,13 @@
 
 /* 1. ☀️ 浅色模式：清晨的森林薄雾 (浅绿过渡到柔和的珍珠白) */
 :root {
-    --color-bg-gradient: linear-gradient(135deg, #eaf5f0 0%, #f4fbf8 50%, #ffffff 100%);
+    --color-bg-gradient: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%) !important;
   }
   
   /* 2. 🌙 深色模式：深邃的午夜雨林 (深青色过渡到暗夜黑) */
   .dark {
-    --color-bg-gradient: linear-gradient(135deg, #0d1f18 0%, #132a22 50%, #0a120e 100%);
-  }
+    --color-bg-gradient: linear-gradient(135deg, #0f172a 0%, #064e3b 100%) !important;
+}
   
 /* =========================================
    3. 赋予物理层次感 + 有机流体弧线 (参数微调加强版)

@@ -100,6 +100,45 @@
     from { opacity: 0; transform: scale(0.8) translateY(20px); }
     to { opacity: 1; transform: scale(1) translateY(0); }
   }
+
+  /* ===================================================
+     📱 手机端专属优化 (屏幕宽度小于 768px 时自动触发)
+     =================================================== */
+     @media (max-width: 768px) {
+    /* 1. 缩小主容器的边距，给内容留出更多空间 */
+    .wall-container {
+      padding: 15px;
+      margin-top: 30px;
+    }
+    
+    /* 2. 让输入框在手机上变成上下排列，按钮填满整行方便手指点击 */
+    .input-area {
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .send-btn {
+      width: 100%;
+      padding: 12px;
+    }
+    
+    /* 4. 气泡卡片全面瘦身：缩小内边距和圆角 */
+    .bubble-card {
+      padding: 12px 15px;
+      border-radius: 15px;
+      border-bottom-left-radius: 2px;
+    }
+    
+    /* 5. 缩小字体，让单行能容纳更多字符 */
+    .bubble-header {
+      font-size: 0.8rem;
+      margin-bottom: 6px;
+    }
+    .bubble-content {
+      font-size: 0.95rem; /* 比电脑端的 1.1rem 明显缩小 */
+      line-height: 1.4;
+    }
+  }
 </style>
   
   <div class="wall-container" id="message-wall" data-aos="fade-up">

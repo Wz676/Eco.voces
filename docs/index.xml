@@ -2,12 +2,32 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Eco.Voces on Muro de reciclaje </title>
-    <link>http://localhost:1313/Eco.voces/</link>
+    <link>https://Wz676.github.io/Eco.voces/</link>
     <description>Recent content in Eco.Voces on Muro de reciclaje </description>
     <generator>Hugo -- gohugo.io</generator>
     <language>es-VE</language>
     <copyright>© 2026 </copyright>
-    <atom:link href="http://localhost:1313/Eco.voces/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 17 Mar 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://Wz676.github.io/Eco.voces/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Información y Visión</title>
+      <link>https://Wz676.github.io/Eco.voces/informacion/</link>
+      <pubDate>Tue, 17 Mar 2026 00:00:00 +0000</pubDate>
+      
+      <guid>https://Wz676.github.io/Eco.voces/informacion/</guid>
+      <description>&lt;div style=&#34;max-width: 1200px; margin: 50px auto; padding: 0 20px;&#34;&gt;&#xA;  &lt;h1 style=&#34;text-align: center; margin-bottom: 3rem;&#34;&gt;Nuestra Misión Ecológica&lt;/h1&gt;&#xA;&lt;style&gt;&#xA;    .eco-story { display: flex; flex-wrap: wrap; align-items: center; margin: 3rem 0; gap: 3rem; }&#xA;     &#xA;    .eco-story-img { flex: 1 1 300px; border-radius: 15px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.15); }&#xA;    .eco-story-img img { width: 100%; height: auto; display: block; object-fit: cover; transition: transform 0.3s ease; }&#xA;    .eco-story-img img:hover { transform: scale(1.05); }  &#xA;    &#xA;     &#xA;    .eco-story-text { flex: 1 1 300px; text-align: left; }&#xA;    .eco-story-text h3 { margin-top: 0; font-size: 2rem; margin-bottom: 1rem; }&#xA;    .eco-story-text p { font-size: 1.1rem; line-height: 1.8; opacity: 0.8; }&#xA;  &lt;/style&gt;&#xA;  &#xA;  &lt;div class=&#34;eco-story&#34; data-aos=&#34;fade-up&#34; &gt;&#xA;    &lt;div class=&#34;eco-story-text&#34;&gt;&#xA;      &lt;h3&gt;¿Por qué Reciclar?&lt;/h3&gt;&#xA;      &lt;p&gt;&#xA;  Aquí explicamos la importancia del reciclaje dentro de la Universidad Bicentenaria de Aragua. Los desechos tecnológicos y plásticos son un problema creciente.&#xA;  &lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>Zona de Interacción</title>
+      <link>https://Wz676.github.io/Eco.voces/interactuar/</link>
+      <pubDate>Tue, 17 Mar 2026 00:00:00 +0000</pubDate>
+      
+      <guid>https://Wz676.github.io/Eco.voces/interactuar/</guid>
+      <description>&lt;div style=&#34;text-align: center; margin-top: 50px; margin-bottom: 50px;&#34;&gt;&#xA;  &lt;h1&gt;🎮 Zona de Interacción&lt;/h1&gt;&#xA;  &lt;p&gt;Aquí colocaremos la encuesta y el juego de clasificación de basura.&lt;/p&gt;&#xA;&lt;/div&gt;</description>
+      
+    </item>
     
   </channel>
 </rss>

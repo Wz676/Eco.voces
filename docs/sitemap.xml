@@ -3,6 +3,15 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
 
   <url>
-    <loc>http://localhost:1313/Eco.voces/</loc>
+    <loc>https://Wz676.github.io/Eco.voces/</loc>
+    <lastmod>2026-03-17T00:00:00+00:00</lastmod>
+  </url>
+  <url>
+    <loc>https://Wz676.github.io/Eco.voces/informacion/</loc>
+    <lastmod>2026-03-17T00:00:00+00:00</lastmod>
+  </url>
+  <url>
+    <loc>https://Wz676.github.io/Eco.voces/interactuar/</loc>
+    <lastmod>2026-03-17T00:00:00+00:00</lastmod>
   </url>
 </urlset>
