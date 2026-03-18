@@ -1,0 +1,47 @@
+<style>
+    .survey-container {
+      max-width: 800px;
+      margin: 40px auto;
+      background: rgba(255, 255, 255, 0.4);
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.05);
+      transition: all 0.3s ease;
+    }
+  
+    /* 🌙 深色模式自动适配 */
+    .dark .survey-container {
+      background: rgba(30, 41, 59, 0.6);
+      border-color: rgba(255, 255, 255, 0.1);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+    }
+  
+    .survey-header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    
+    .survey-header h2 { margin-bottom: 5px; color: var(--color-primary); }
+    .dark .survey-header h2 { color: #10b981; }
+  
+    .survey-iframe {
+      width: 100%;
+      height: 800px; /* 如果你的表单很长，可以把这个数字调大，比如 1000px */
+      border: none;
+      border-radius: 10px;
+      background: transparent;
+    }
+  </style>
+  
+  <div class="survey-container" data-aos="fade-up">
+    <div class="survey-header">
+      <h2>📊 Tu Voz Importa</h2>
+      <p style="opacity: 0.8;">Ayúdanos a diseñar un campus más inteligente y ecológico.</p>
+    </div>
+    
+    <iframe class="survey-iframe" src="{{ .Get "link" }}" title="Encuesta Ecológica">
+      Cargando encuesta... 🍃
+    </iframe>
+  </div>
