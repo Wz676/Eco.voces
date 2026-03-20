@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Eco.Clasificador</title>
+  <style>
+    /* =========================================
+       1. 全局与重置 (极简毛玻璃风格)
+       ========================================= */
+       * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+    body { background: transparent; overflow: hidden; touch-action: none; color: #1f2937; }
+    
+    /* 游戏主容器 (占满整个 iframe) */
+    #game-container { position: relative; width: 100vw; height: 100vh; background: linear-gradient(135deg, #f8fdf9 0%, #e2f1e8 100%); overflow: hidden; display: flex; flex-direction: column; transition: box-shadow 0.3s ease; }
+
+    /* =========================================
+       ✨ 新增: 连击时的 Fever (狂热) 荧光边框
+       ========================================= */
+    .fever-effect { box-shadow: inset 0 0 40px rgba(16, 185, 129, 0.7); border: 4px solid rgba(16, 185, 129, 0.8) !important; animation: glowPalse 0.5s infinite alternate; }
+    @keyframes glowPalse { from { box-shadow: inset 0 0 30px rgba(16, 185, 129, 0.5); } to { box-shadow: inset 0 0 50px rgba(16, 185, 129, 0.9); } }
+
+    /* =========================================
+       2. UI 层：HUD (状态栏)
+       ========================================= */
+    #hud { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: rgba(255, 255, 255, 0.5); backdrop-filter: blur(10px); z-index: 10; border-bottom: 1px solid rgba(255,255,255,0.6); }
+    .stat-box { font-size: 1.2rem; font-weight: bold; }
+    #score-display { color: #10b981; font-size: 1.5rem; transition: font-size 0.2s; }
+    
+    /* 🌟 新增: 连击文字高亮效果 (如 image_0.png) */
+    #combo-display { color: #fde047; font-size: 1rem; margin-left: 10px; opacity: 0; transition: opacity 0.3s, font-size 0.3s; font-weight: 900; text-shadow: 0 0 10px rgba(253, 224, 71, 0.7); display: inline-block; }
+    .fever-active #combo-display { font-size: 1.3rem; } /* 狂热时放大 */
+    
+    #lives-display { color: #ef4444; font-size: 1.2rem; letter-spacing: 2px; }
+
+    /* =========================================
+       3. 物理引擎层：舞台与垃圾 (保持 GPU 硬件加速)
+       ========================================= */
+    #stage { flex-grow: 1; position: relative; width: 100%; overflow: hidden; }
+    .trash-item { position: absolute; left: 50%; transform: translateX(-50%); font-size: 3.5rem; user-select: none; will-change: transform; z-index: 5; text-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+
+    /* =========================================
+       4. 交互层：底部垃圾桶 (更新：支持详细双行说明)
+       ========================================= */
+    #bins-area { display: flex; width: 100%; height: 130px; padding: 10px; gap: 8px; background: rgba(255,255,255,0.3); backdrop-filter: blur(5px); z-index: 10; border-top: 1px solid rgba(255,255,255,0.5); }
+    .bin { flex: 1; border-radius: 15px; display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: pointer; transition: transform 0.1s; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border: 2px solid rgba(255,255,255,0.2); color: white; font-weight: bold; font-size: 0.8rem; line-height: 1.2; text-align: center; padding: 5px; }
+    .bin:active { transform: scale(0.92); } 
+    .bin span { font-size: 1.8rem; margin-bottom: 2px; }
+    
+    /* 这里是垃圾桶的具体颜色代码... (bin-azul 等，请保留原有的样式) */
+
+    /* 大厅网格样式... (其余部分保持原有) */
+
+    /* 垃圾桶颜色保持不变... */
+    .bin-azul { background: linear-gradient(135deg, #60a5fa, #2563eb); }
+    .bin-amarillo { background: linear-gradient(135deg, #fde047, #eab308); color: #854d0e; }
+    .bin-verde { background: linear-gradient(135deg, #4ade80, #16a34a); }
+    .bin-rojo { background: linear-gradient(135deg, #f87171, #dc2626); }
+
+    /* =========================================
+       新增：大厅教程面板样式
+       ========================================= */
+    .tutorial-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; max-width: 380px; margin-bottom: 25px; }
+    .tutorial-item { background: rgba(255,255,255,0.7); padding: 12px 10px; border-radius: 12px; display: flex; align-items: center; gap: 10px; text-align: left; font-size: 0.85rem; color: #374151; box-shadow: 0 4px 10px rgba(0,0,0,0.05); border: 1px solid rgba(255,255,255,0.5); }
+    .tutorial-icon { font-size: 1.8rem; }
+
+    /* =========================================
+       5. 屏幕覆盖层：大厅与结算与排行榜
+       ========================================= */
+    .screen-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.85); backdrop-filter: blur(15px); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 100; text-align: center; padding: 20px; transition: opacity 0.3s; }
+    .hidden { display: none !important; }
+    
+    .btn-primary { background: #10b981; color: white; border: none; padding: 15px 40px; font-size: 1.2rem; font-weight: bold; border-radius: 50px; cursor: pointer; box-shadow: 0 10px 20px rgba(16, 185, 129, 0.3); transition: transform 0.2s; margin-top: 20px; }
+    .btn-primary:active { transform: scale(0.95); }
+
+    /* 排行榜 UI */
+    .leaderboard-container { margin-top: 20px; width: 100%; max-width: 350px; background: white; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); overflow: hidden; }
+    .leaderboard-header { background: #f3f4f6; padding: 10px; font-weight: bold; font-size: 0.9rem; color: #4b5563; }
+    .leaderboard-list { max-height: 240px; overflow-y: auto; list-style: none; padding: 0; margin: 0; }
+    .leaderboard-list li { display: flex; justify-content: space-between; padding: 12px 15px; border-bottom: 1px solid #f3f4f6; font-size: 0.95rem; }
+    .leaderboard-list li:nth-child(even) { background: #f9fafb; }
+    .rank-1 { color: #eab308; font-weight: bold; }
+    .rank-2 { color: #9ca3af; font-weight: bold; }
+    .rank-3 { color: #d97706; font-weight: bold; }
+
+    .input-group { margin-top: 20px; display: flex; gap: 10px; width: 100%; max-width: 350px; }
+    .input-group input { flex-grow: 1; padding: 12px; border: 2px solid #e5e7eb; border-radius: 10px; outline: none; font-size: 1rem; }
+    .input-group input:focus { border-color: #10b981; }
+    .btn-secondary { background: #3b82f6; color: white; border: none; padding: 10px 20px; border-radius: 10px; font-weight: bold; cursor: pointer; }
+    
+    /* 震动特效 (分错时触发) */
+    @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+    .shake-error { animation: shake 0.3s ease-in-out; filter: hue-rotate(300deg); }
+
+    /* =========================================
+       ✨ 修改: 帮助按钮位置 (移至左下角，垃圾桶上方)
+       ========================================= */
+       .help-btn { 
+      position: absolute; 
+      bottom: 150px; /* 放在垃圾桶区域的上方 */
+      left: 20px;    /* 放在屏幕左侧 */
+      width: 45px; 
+      height: 45px; 
+      border-radius: 50%; 
+      background: rgba(255,255,255,0.8); 
+      backdrop-filter: blur(5px); 
+      border: 2px solid #10b981; /* 加上绿色边框更显眼 */
+      color: #10b981;
+      font-size: 1.5rem; 
+      display: flex; 
+      justify-content: center; 
+      align-items: center; 
+      cursor: pointer; 
+      z-index: 100; 
+      box-shadow: 0 5px 15px rgba(0,0,0,0.15); 
+      transition: transform 0.2s; 
+    }
+    .help-btn:active { transform: scale(0.9); }
+
+    .codex-content { background: white; width: 90%; max-width: 400px; max-height: 80vh; border-radius: 20px; padding: 20px; overflow-y: auto; text-align: left; box-shadow: 0 20px 40px rgba(0,0,0,0.2); position: relative; }
+    .codex-close { position: absolute; top: 15px; right: 20px; font-size: 1.5rem; color: #9ca3af; cursor: pointer; }
+    .codex-section { margin-bottom: 20px; }
+    .codex-title { font-size: 1.2rem; font-weight: bold; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; border-bottom: 2px solid #f3f4f6; padding-bottom: 5px; }
+    .codex-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px; }
+    .codex-item { display: flex; flex-direction: column; align-items: center; text-align: center; background: #f9fafb; padding: 8px; border-radius: 10px; font-size: 0.8rem; color: #4b5563; }
+    .codex-item span { font-size: 1.8rem; margin-bottom: 5px; }
+    .codex-badge { background: #ef4444; color: white; font-size: 0.6rem; padding: 2px 5px; border-radius: 5px; margin-top: 5px; font-weight: bold; }
+  </style>
+</head>
+<body>
+
+<div id="game-container">
+
+  <div class="help-btn" onclick="openCodex()">❓</div>
+
+  <div id="codex-screen" class="screen-overlay hidden" style="z-index: 200;">
+    <div class="codex-content">
+      <span class="codex-close" onclick="closeCodex()">✖</span>
+      <h2 style="color: #10b981; margin-bottom: 5px; font-size: 1.5rem;">Guía de Reciclaje</h2>
+      <p style="color: #6b7280; font-size: 0.9rem; margin-bottom: 20px;">Conoce los objetos y sus categorías.</p>
+
+      <div class="codex-section">
+        <div class="codex-title" style="color: #3b82f6;">🟦 Papel y Cartón</div>
+        <div class="codex-grid">
+          <div class="codex-item"><span>🗞️</span>Periódico</div>
+          <div class="codex-item"><span>📦</span>Cartón</div>
+          <div class="codex-item"><span>📄</span>Hojas de Papel</div>
+          <div class="codex-item"><span>🧻</span>Papel<div class="codex-badge">Avanzado</div></div>
+          <div class="codex-item"><span>🧾</span>Recibo<div class="codex-badge">Avanzado</div></div>
+        </div>
+      </div>
+
+      <div class="codex-section">
+        <div class="codex-title" style="color: #eab308;">🟨 Plástico y Lata</div>
+        <div class="codex-grid">
+          <div class="codex-item"><span>🥤</span>Vaso Plástico</div>
+          <div class="codex-item"><span>🧴</span>Envase Plástico</div>
+          <div class="codex-item"><span>🥫</span>Lata</div>
+          <div class="codex-item"><span>🛍️</span>Bolsa plástica<div class="codex-badge">Avanzado</div></div>
+          <div class="codex-item"><span>🧃</span>Cartón de Jugo<div class="codex-badge">Avanzado</div></div>
+        </div>
+      </div>
+
+      <div class="codex-section">
+        <div class="codex-title" style="color: #22c55e;">🟩 Orgánico</div>
+        <div class="codex-grid">
+          <div class="codex-item"><span>🍎</span>Manzana</div>
+          <div class="codex-item"><span>🍌</span>Banana</div>
+          <div class="codex-item"><span>🍂</span>Hojas Secas</div>
+          <div class="codex-item"><span>🪵</span>Madera<div class="codex-badge">Avanzado</div></div>
+          <div class="codex-item"><span>🥚</span>Cáscara de Huevo<div class="codex-badge">Avanzado</div></div>
+        </div>
+      </div>
+
+      <div class="codex-section">
+        <div class="codex-title" style="color: #ef4444;">🟥 Peligroso</div>
+        <div class="codex-grid">
+          <div class="codex-item"><span>🔋</span>Pila</div>
+          <div class="codex-item"><span>📱</span>Móvil</div>
+          <div class="codex-item"><span>💡</span>Bombillo</div>
+          <div class="codex-item"><span>🪫</span>Batería rota<div class="codex-badge">Peligro</div></div>
+          <div class="codex-item"><span>👢</span>Zapato/Cuero<div class="codex-badge">Especial</div></div>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  
+  <div id="hud">
+    <div class="stat-box">Puntos: <span id="score-display">0</span> <span id="combo-display">x2 Combo!</span></div>
+    <div class="stat-box" id="lives-display">❤️❤️❤️</div>
+  </div>
+
+  <div id="stage"></div>
+
+  <div id="bins-area">
+    <div class="bin bin-azul" onclick="checkCollision('azul')"><span>📄</span>Papel /<br>Cartón</div>
+    <div class="bin bin-amarillo" onclick="checkCollision('amarillo')"><span>🥤</span>Plástico /<br>Lata</div>
+    <div class="bin bin-verde" onclick="checkCollision('verde')"><span>🍎</span>Restos<br>Orgánicos</div>
+    <div class="bin bin-rojo" onclick="checkCollision('rojo')"><span>🔋</span>Residuo<br>Peligroso</div>
+  </div>
+
+  <div id="start-screen" class="screen-overlay" style="overflow-y: auto;">
+    <h1 style="font-size: 2.2rem; color: #10b981; margin-bottom: 5px;">Eco.Clasificador</h1>
+    <p style="color: #6b7280; margin-bottom: 20px; font-size: 1rem;">Lee la guía antes de empezar. ¡Tienes 3 vidas!</p>
+    
+    <div class="tutorial-grid">
+      <div class="tutorial-item" style="border-left: 5px solid #3b82f6;">
+        <div class="tutorial-icon">🟦</div>
+        <div><strong>Azul</strong><br>Papel y Cartón</div>
+      </div>
+      <div class="tutorial-item" style="border-left: 5px solid #eab308;">
+        <div class="tutorial-icon">🟨</div>
+        <div><strong>Amarillo</strong><br>Plástico y Lata</div>
+      </div>
+      <div class="tutorial-item" style="border-left: 5px solid #22c55e;">
+        <div class="tutorial-icon">🟩</div>
+        <div><strong>Verde</strong><br>Resto Orgánico</div>
+      </div>
+      <div class="tutorial-item" style="border-left: 5px solid #ef4444;">
+        <div class="tutorial-icon">🟥</div>
+        <div><strong>Rojo</strong><br>Residuo Peligroso</div>
+      </div>
+    </div>
+
+    <button class="btn-primary" onclick="startGame()">▶ Empezar</button>
+  </div>
+
+  <div id="game-over-screen" class="screen-overlay hidden">
+    <h2 style="font-size: 2.2rem; color: #ef4444; margin-bottom: 5px;">¡Juego Terminado!</h2>
+    <p style="font-size: 1.2rem; color: #4b5563;">Tu puntuación: <strong id="final-score" style="color: #10b981; font-size: 1.8rem;">0</strong></p>
+    
+    <div class="input-group" id="submit-section">
+      <input type="text" id="player-name" placeholder="Tu nombre o apodo..." maxlength="15">
+      <button class="btn-secondary" onclick="saveScore()">Guardar</button>
+    </div>
+
+    <div class="leaderboard-container">
+      <div class="leaderboard-header">🏆 Top 30 Récords Locales</div>
+      <ul class="leaderboard-list" id="leaderboard-list">
+        </ul>
+    </div>
+
+    <button class="btn-primary" style="padding: 12px 30px; margin-top: 15px;" onclick="resetToLobby()">Volver a Jugar</button>
+  </div>
+
+</div>
+
+<script>
+    // ==========================================
+    // 1. 双层物品库：基础库 vs 混淆库
+    // ==========================================
+    const basicTrashDB = [
+      { emoji: "🗞️", type: "azul" }, { emoji: "📦", type: "azul" }, { emoji: "📄", type: "azul" },
+      { emoji: "🥤", type: "amarillo" }, { emoji: "🧴", type: "amarillo" }, { emoji: "🥫", type: "amarillo" },
+      { emoji: "🍎", type: "verde" }, { emoji: "🍌", type: "verde" }, { emoji: "🍂", type: "verde" },
+      { emoji: "🔋", type: "rojo" }, { emoji: "📱", type: "rojo" }, { emoji: "💡", type: "rojo" }
+    ];
+  
+    const hardTrashDB = [
+      { emoji: "🧻", type: "azul" }, // 纸筒芯
+      { emoji: "🧾", type: "azul" }, // 电影票/收据 
+      { emoji: "🛍️", type: "amarillo" }, // 塑料袋
+      { emoji: "🧃", type: "amarillo" }, // 饮料盒
+      { emoji: "🪵", type: "verde" }, // 碎木片 
+      { emoji: "🥚", type: "verde" }, // 蛋壳 
+      { emoji: "🪫", type: "rojo" }, // 漏液电池 
+      { emoji: "👢", type: "rojo" }  // 皮革靴 
+    ];
+  
+    // ==========================================
+    // 2. 状态机 (State)
+    // ==========================================
+    let state = {
+      isRunning: false,
+      score: 0,
+      lives: 3,
+      combo: 0,
+      baseSpeed: 2.0, 
+      activeTrash: null, 
+      animationFrameId: null,
+      hardModeNotified: false 
+    };
+  
+    // DOM 元素引用
+    const stage = document.getElementById('stage');
+    const scoreDisplay = document.getElementById('score-display');
+    const comboDisplay = document.getElementById('combo-display');
+    const livesDisplay = document.getElementById('lives-display');
+    const startScreen = document.getElementById('start-screen');
+    const gameOverScreen = document.getElementById('game-over-screen');
+    const gameContainer = document.getElementById('game-container');
+  
+    // ==========================================
+    // 3. 游戏主循环 (GPU 硬件加速渲染)
+    // ==========================================
+    function gameLoop() {
+      if (!state.isRunning) return;
+  
+      if (state.activeTrash) {
+        state.activeTrash.y += state.activeTrash.speed;
+        state.activeTrash.element.style.transform = `translate(-50%, ${state.activeTrash.y}px)`;
+  
+        // 垃圾掉到地板
+        if (state.activeTrash.y > stage.offsetHeight - 50) {
+          loseLife();
+          removeCurrentTrash();
+          if (state.isRunning) spawnTrash();
+        }
+      }
+  
+      state.animationFrameId = requestAnimationFrame(gameLoop);
+    }
+  
+    // ==========================================
+    // 4. ✨ 智能生成系统：250分门槛 & 激进加速
+    // ==========================================
+    function spawnTrash() {
+      let currentDB = basicTrashDB;
+  
+      // 🌟 阈值提升：250 分才会解锁困难库！
+      if (state.score >= 250) {
+        currentDB = basicTrashDB.concat(hardTrashDB);
+        
+        if (!state.hardModeNotified) {
+          state.hardModeNotified = true;
+          scoreDisplay.style.color = "#ef4444";
+          setTimeout(() => scoreDisplay.style.color = "#10b981", 1000);
+        }
+      }
+  
+      const randomItem = currentDB[Math.floor(Math.random() * currentDB.length)];
+      const el = document.createElement('div');
+      el.className = 'trash-item';
+      el.innerText = randomItem.emoji;
+      el.style.transform = `translate(-50%, -100px)`; 
+      stage.appendChild(el);
+  
+      // 🌟 速度回归最初的硬核设计：
+      // 每 120 分提升 1.0 的速度，极速狂飙，上限开放至 8！
+      let currentSpeed = state.baseSpeed + (state.score / 120);
+      if (currentSpeed > 8) currentSpeed = 8; 
+  
+      state.activeTrash = {
+        element: el,
+        type: randomItem.type,
+        y: -100,
+        speed: currentSpeed
+      };
+    }
+  
+    // ==========================================
+    // 5. 交互层：连击与 Fever 狂热判定
+    // ==========================================
+    function checkCollision(clickedColor) {
+      if (!state.isRunning || !state.activeTrash) return;
+  
+      if (clickedColor === state.activeTrash.type) {
+        // 答对了
+        state.combo++;
+        let pointsEarned = state.combo >= 3 ? 20 : 10; 
+        state.score += pointsEarned;
+        scoreDisplay.innerText = state.score;
+        
+        // Fever 特效激活
+        if (state.combo >= 3) {
+          gameContainer.classList.add('fever-active', 'fever-effect');
+          comboDisplay.style.opacity = 1;
+          comboDisplay.innerText = `x${state.combo} Combo!`;
+          scoreDisplay.style.fontSize = "1.8rem";
+          setTimeout(()=> scoreDisplay.style.fontSize = "1.5rem", 100);
+        } else {
+          gameContainer.classList.remove('fever-active', 'fever-effect');
+          comboDisplay.style.opacity = 0;
+        }
+        
+        state.activeTrash.element.style.transition = "transform 0.2s, opacity 0.2s";
+        state.activeTrash.element.style.transform = `translate(-50%, ${state.activeTrash.y}px) scale(0)`;
+        state.activeTrash.element.style.opacity = "0";
+        
+      } else {
+        // 答错了
+        loseLife();
+        state.activeTrash.element.innerText = "❌";
+      }
+  
+      const oldEl = state.activeTrash.element;
+      setTimeout(() => { if(oldEl.parentNode) oldEl.remove(); }, 200);
+      state.activeTrash = null;
+      
+      if (state.isRunning) spawnTrash();
+    }
+  
+    // ==========================================
+    // 6. 扣血与状态重置
+    // ==========================================
+    function loseLife() {
+      state.lives--;
+      
+      // 断开连击，关闭 Fever
+      state.combo = 0; 
+      comboDisplay.style.opacity = 0;
+      gameContainer.classList.remove('fever-active', 'fever-effect'); 
+      
+      livesDisplay.innerText = "❤️".repeat(state.lives) + "🖤".repeat(3 - state.lives);
+      
+      gameContainer.classList.add('shake-error');
+      setTimeout(() => gameContainer.classList.remove('shake-error'), 300);
+  
+      if (state.lives <= 0) {
+        triggerGameOver();
+      }
+    }
+  
+    function removeCurrentTrash() {
+      if (state.activeTrash && state.activeTrash.element.parentNode) {
+        state.activeTrash.element.remove();
+      }
+      state.activeTrash = null;
+    }
+  
+    // ==========================================
+    // 7. 游戏流程控制 (开局与结束)
+    // ==========================================
+    function startGame() {
+      state.score = 0; 
+      state.lives = 3; 
+      state.combo = 0; 
+      state.isRunning = true;
+      state.hardModeNotified = false; // 重置难度锁
+  
+      scoreDisplay.innerText = state.score;
+      livesDisplay.innerText = "❤️❤️❤️";
+      comboDisplay.style.opacity = 0;
+      gameContainer.classList.remove('fever-active', 'fever-effect');
+      
+      startScreen.classList.add('hidden');
+      gameOverScreen.classList.add('hidden');
+      stage.innerHTML = ''; 
+      
+      document.getElementById('submit-section').style.display = 'flex';
+      document.getElementById('player-name').value = '';
+  
+      spawnTrash();
+      gameLoop();
+    }
+  
+    function triggerGameOver() {
+      state.isRunning = false;
+      cancelAnimationFrame(state.animationFrameId);
+      document.getElementById('final-score').innerText = state.score;
+      gameOverScreen.classList.remove('hidden');
+      renderLeaderboard();
+    }
+  
+    function resetToLobby() {
+      gameOverScreen.classList.add('hidden');
+      startScreen.classList.remove('hidden');
+    }
+  
+    // ==========================================
+  // 8. 🏆 终极版：全球云端排行榜系统 (Fetch API)
+  // ==========================================
+  
+  const API_URL = "https://script.google.com/macros/s/AKfycbyYu5u6P5I_Qm9-DXydn0UxqkcGTCGx1e-Cxv4rhmHQrSE7xVF9LKylhFfA0AyiOyj1og/exec"; 
+
+// 发送分数到云端 (异步请求)
+async function saveScore() {
+  const nameInput = document.getElementById('player-name');
+  const submitBtn = document.querySelector('#submit-section .btn-secondary');
+  const name = nameInput.value.trim() || "Anónimo";
+  const currentScore = state.score;
+
+  // UX 优化：让玩家知道数据正在发送
+  submitBtn.innerText = "Enviando... 🚀";
+  submitBtn.disabled = true;
+  nameInput.disabled = true;
+
+  try {
+    // 向谷歌服务器发射数据包裹 (POST)
+    const saveUrl = `${API_URL}?action=save&name=${encodeURIComponent(name)}&score=${currentScore}`;
+      await fetch(saveUrl);
+    
+    // 发送成功后：隐藏输入框，重新向服务器请求最新的排行榜
+    document.getElementById('submit-section').style.display = 'none';
+    renderLeaderboard();
+  } catch (error) {
+    console.error("Error al guardar:", error);
+    alert("Error de conexión. Revisa tu internet e inténtalo de nuevo.");
+    submitBtn.innerText = "Guardar";
+    submitBtn.disabled = false;
+    nameInput.disabled = false;
+  }
+}
+
+// 从云端读取前 30 名数据 (异步请求)
+async function renderLeaderboard() {
+  const list = document.getElementById('leaderboard-list');
+  
+  // UX 优化：在等待网络时显示加载动画
+  list.innerHTML = '<li style="justify-content:center; color:#6b7280;">Cargando datos del servidor... ⏳</li>';
+
+  try {
+    // 向谷歌服务器请求数据 (GET)
+    const response = await fetch(API_URL);
+    const records = await response.json();
+
+    list.innerHTML = ''; // 清空加载提示
+
+    if (records.length === 0) {
+      list.innerHTML = '<li style="justify-content:center; color:#9ca3af;">Aún no hay récords. ¡Sé el primero!</li>';
+      return;
+    }
+
+    // 渲染排行榜 (支持滑动的前 30 名)
+    records.forEach((record, index) => {
+      let rankClass = "";
+      let medal = `${index + 1}.`;
+      if (index === 0) { rankClass = "rank-1"; medal = "🥇"; }
+      if (index === 1) { rankClass = "rank-2"; medal = "🥈"; }
+      if (index === 2) { rankClass = "rank-3"; medal = "🥉"; }
+
+      const li = document.createElement('li');
+      li.innerHTML = `<span class="${rankClass}">${medal} ${record.name}</span> <span style="font-weight:bold;">${record.score} pts</span>`;
+      list.appendChild(li);
+    });
+  } catch (error) {
+    console.error("Error al cargar:", error);
+    list.innerHTML = '<li style="justify-content:center; color:#ef4444;">Error al conectar con la base de datos. 🔌</li>';
+  }
+}
+
+// 游戏初始化时，自动拉取一次云端排行榜
+renderLeaderboard();
+
+    // ==========================================
+  // 9. 知识库百科控制
+  // ==========================================
+  const codexScreen = document.getElementById('codex-screen');
+  function openCodex() {
+    // 如果游戏正在进行中，点击问号可以暂停游戏！
+    if (state.isRunning) {
+      state.isRunning = false;
+      cancelAnimationFrame(state.animationFrameId);
+    }
+    codexScreen.classList.remove('hidden');
+  }
+  
+  function closeCodex() {
+    codexScreen.classList.add('hidden');
+    // 如果是从游戏中途打开的，关闭后恢复游戏
+    if (!startScreen.classList.contains('hidden') === false && !gameOverScreen.classList.contains('hidden') === false) {
+      state.isRunning = true;
+      gameLoop();
+    }
+  }
+  </script>
+
+</body>
+</html>

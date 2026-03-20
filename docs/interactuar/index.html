@@ -216,7 +216,7 @@
     
     
     "mainEntityOfPage": "true",
-    "wordCount": "53"
+    "wordCount": "47"
   }]
   </script>
 
@@ -633,61 +633,73 @@
   <p style="font-size: 1.2rem; opacity: 0.8;">Elige tu actividad y ayúdanos a mejorar el campus de la UBA.</p>
 </div>
 <style>
-    .action-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; max-width: 900px; margin: 0 auto 50px auto; padding: 0 20px; }
-    .action-card { background: rgba(255, 255, 255, 0.6); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.4); border-radius: 20px; padding: 40px 20px; text-align: center; cursor: pointer; box-shadow: 0 10px 30px rgba(0,0,0,0.05); transition: all 0.3s; }
-    .action-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(16, 185, 129, 0.2); border-color: #10b981; }
-    .card-icon { font-size: 4rem; margin-bottom: 15px; }
-    .card-title { font-size: 1.5rem; font-weight: bold; margin-bottom: 10px; color: #1f2937; }
-    .card-desc { color: #6b7280; font-size: 0.95rem; }
-    .dark .action-card { background: rgba(30, 41, 59, 0.6); border-color: rgba(255, 255, 255, 0.1); }
-    .dark .card-title { color: #f3f4f6; } .dark .card-desc { color: #9ca3af; }
+   
+  .action-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; max-width: 900px; margin: 0 auto 50px auto; padding: 0 20px; }
+  .action-card { background: rgba(255, 255, 255, 0.6); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.4); border-radius: 20px; padding: 40px 20px; text-align: center; cursor: pointer; box-shadow: 0 10px 30px rgba(0,0,0,0.05); transition: all 0.3s; }
+  .action-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(16, 185, 129, 0.2); border-color: #10b981; }
+  .card-icon { font-size: 4rem; margin-bottom: 15px; }
+  .card-title { font-size: 1.5rem; font-weight: bold; margin-bottom: 10px; color: #1f2937; }
+  .card-desc { color: #6b7280; font-size: 0.95rem; }
+  .dark .action-card { background: rgba(30, 41, 59, 0.6); border-color: rgba(255, 255, 255, 0.1); }
+  .dark .card-title { color: #f3f4f6; } .dark .card-desc { color: #9ca3af; }
+
+   
+  .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(8px); z-index: 9999; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease; }
+  .modal-content { background: white; width: 90%; max-width: 800px; height: 85vh; border-radius: 20px; position: relative; transform: scale(0.9); transition: transform 0.3s; box-shadow: 0 25px 50px rgba(0,0,0,0.3); display: flex; flex-direction: column; overflow: hidden; }
+  .dark .modal-content { background: #1e293b; border: 1px solid rgba(255,255,255,0.1); }
+  .close-btn { position: absolute; top: 15px; right: 20px; font-size: 2.5rem; color: #6b7280; cursor: pointer; z-index: 10; line-height: 1; }
+  .close-btn:hover { color: #ef4444; }
+  .modal-overlay.active { display: flex; opacity: 1; }
+  .modal-overlay.active .modal-content { transform: scale(1); }
   
-     
-    .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(8px); z-index: 9999; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease; }
-    .modal-content { background: white; width: 90%; max-width: 800px; height: 85vh; border-radius: 20px; position: relative; transform: scale(0.9); transition: transform 0.3s; box-shadow: 0 25px 50px rgba(0,0,0,0.3); display: flex; flex-direction: column; overflow: hidden; }
-    .dark .modal-content { background: #1e293b; border: 1px solid rgba(255,255,255,0.1); }
-    .close-btn { position: absolute; top: 15px; right: 20px; font-size: 2.5rem; color: #6b7280; cursor: pointer; z-index: 10; line-height: 1; }
-    .close-btn:hover { color: #ef4444; }
-    .modal-overlay.active { display: flex; opacity: 1; }
-    .modal-overlay.active .modal-content { transform: scale(1); }
-  </style>
-  
-  <div class="action-grid" data-aos="fade-up">
-    <div class="action-card" onclick="openModal('survey-modal')">
-      <div class="card-icon">📊</div>
-      <div class="card-title">Encuesta de Sostenibilidad</div>
-      <div class="card-desc">Toma 1 minuto. Danos tu opinión sobre los hábitos de reciclaje en la universidad.</div>
-    </div>
-    <div class="action-card" onclick="alert('El juego Eco.Clasificador se está programando... ¡Vuelve pronto! 🛠️')">
-      <div class="card-icon">🕹️</div>
-      <div class="card-title">Juego: Eco.Clasificador</div>
-      <div class="card-desc">Pon a prueba tus reflejos separando la basura. ¡Gana puntos y salva el planeta!</div>
-    </div>
+   
+  .app-iframe { width: 100%; height: 100%; border: none; border-radius: 20px; background: transparent; }
+</style>
+
+<div class="action-grid" data-aos="fade-up">
+  <div class="action-card" onclick="openModal('survey-modal')">
+    <div class="card-icon">📊</div>
+    <div class="card-title">Encuesta de Sostenibilidad</div>
+    <div class="card-desc">Danos tu opinión sobre los hábitos de reciclaje en la universidad.</div>
   </div>
   
-  <div id="survey-modal" class="modal-overlay">
-    <div class="modal-content">
-      <span class="close-btn" onclick="closeModal('survey-modal')">&times;</span>
-      <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSdMo5gMDrIlG5GDXIBjEucrJTXX3HZ7IXGpszNe3yhY9JCX8w/viewform?embedded=true" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0" style="border-radius: 20px; background: transparent;">Cargando…</iframe>
-    </div>
+  <div class="action-card" onclick="openModal('game-modal')">
+    <div class="card-icon">🕹️</div>
+    <div class="card-title">Juego: Eco.Clasificador</div>
+    <div class="card-desc">Pon a prueba tus reflejos separando la basura. ¡Salva el planeta!</div>
   </div>
-  
-  <script>
-    function openModal(modalId) {
-      document.getElementById(modalId).classList.add('active');
-      document.body.style.overflow = 'hidden';
-    }
-    function closeModal(modalId) {
-      document.getElementById(modalId).classList.remove('active');
-      document.body.style.overflow = 'auto';
-    }
-    window.onclick = function(event) {
-      if (event.target.classList.contains('modal-overlay')) {
-        event.target.classList.remove('active');
-        document.body.style.overflow = 'auto';
-      }
-    }
-  </script>
+</div>
+
+<div id="survey-modal" class="modal-overlay">
+  <div class="modal-content">
+    <span class="close-btn" onclick="closeModal('survey-modal')">&times;</span>
+    <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSdMo5gMDrIlG5GDXIBjEucrJTXX3HZ7IXGpszNe3yhY9JCX8w/viewform?embedded=true" class="app-iframe"></iframe>
+  </div>
+</div>
+
+<div id="game-modal" class="modal-overlay">
+  <div class="modal-content">
+    <span class="close-btn" onclick="closeModal('game-modal')">&times;</span>
+    <iframe src="/Eco.voces/juego/index.html" class="app-iframe"></iframe>
+  </div>
+</div>
+
+<script>
+  function openModal(modalId) { 
+    document.getElementById(modalId).classList.add('active'); 
+    document.body.style.overflow = 'hidden'; 
+  }
+  function closeModal(modalId) { 
+    document.getElementById(modalId).classList.remove('active'); 
+    document.body.style.overflow = 'auto'; 
+  }
+  window.onclick = function(event) { 
+    if (event.target.classList.contains('modal-overlay')) { 
+      event.target.classList.remove('active'); 
+      document.body.style.overflow = 'auto'; 
+    } 
+  }
+</script>
 <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 <script>setTimeout(function(){ AOS.init({ duration: 800, once: true }); }, 100);</script>
