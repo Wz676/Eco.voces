@@ -8,17 +8,21 @@
     /* =========================================
        1. 全局与重置 (极简毛玻璃风格)
        ========================================= */
-       * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
     body { background: transparent; overflow: hidden; touch-action: none; color: #1f2937; }
     
     /* 游戏主容器 (占满整个 iframe) */
     #game-container { position: relative; width: 100vw; height: 100vh; background: linear-gradient(135deg, #f8fdf9 0%, #e2f1e8 100%); overflow: hidden; display: flex; flex-direction: column; transition: box-shadow 0.3s ease; }
 
     /* =========================================
-       ✨ 新增: 连击时的 Fever (狂热) 荧光边框
+       ✨ 修改 1: 移除无限循环，新增连击得分时的单次闪烁特效
        ========================================= */
-    .fever-effect { box-shadow: inset 0 0 40px rgba(16, 185, 129, 0.7); border: 4px solid rgba(16, 185, 129, 0.8) !important; animation: glowPalse 0.5s infinite alternate; }
-    @keyframes glowPalse { from { box-shadow: inset 0 0 30px rgba(16, 185, 129, 0.5); } to { box-shadow: inset 0 0 50px rgba(16, 185, 129, 0.9); } }
+    .fever-flash { border-width: 4px; border-style: solid; border-color: rgba(16, 185, 129, 0) !important; animation: feverSingleFlash 0.25s ease-out forwards; z-index: 50; }
+    @keyframes feverSingleFlash { 
+        0% { border-width: 0px; border-color: rgba(16, 185, 129, 0.9); box-shadow: inset 0 0 30px rgba(16, 185, 129, 0.5); } 
+        20% { border-width: 4px; border-color: rgba(16, 185, 129, 1); box-shadow: inset 0 0 50px rgba(16, 185, 129, 0.9); } 
+        100% { border-width: 0px; border-color: rgba(16, 185, 129, 0); box-shadow: inset 0 0 0px rgba(16, 185, 129, 0); } 
+    }
 
     /* =========================================
        2. UI 层：HUD (状态栏)
@@ -27,7 +31,7 @@
     .stat-box { font-size: 1.2rem; font-weight: bold; }
     #score-display { color: #10b981; font-size: 1.5rem; transition: font-size 0.2s; }
     
-    /* 🌟 新增: 连击文字高亮效果 (如 image_0.png) */
+    /* 🌟 连击文字高亮效果 (处于狂热状态时常亮) */
     #combo-display { color: #fde047; font-size: 1rem; margin-left: 10px; opacity: 0; transition: opacity 0.3s, font-size 0.3s; font-weight: 900; text-shadow: 0 0 10px rgba(253, 224, 71, 0.7); display: inline-block; }
     .fever-active #combo-display { font-size: 1.3rem; } /* 狂热时放大 */
     
@@ -37,7 +41,7 @@
        3. 物理引擎层：舞台与垃圾 (保持 GPU 硬件加速)
        ========================================= */
     #stage { flex-grow: 1; position: relative; width: 100%; overflow: hidden; }
-    .trash-item { position: absolute; left: 50%; transform: translateX(-50%); font-size: 3.5rem; user-select: none; will-change: transform; z-index: 5; text-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+    .trash-item { position: absolute; left: 50%; top: 0; transform: translate(-50%, -100px); font-size: 3.5rem; user-select: none; will-change: transform; z-index: 5; text-shadow: 0 5px 15px rgba(0,0,0,0.1); }
 
     /* =========================================
        4. 交互层：底部垃圾桶 (更新：支持详细双行说明)
@@ -47,10 +51,6 @@
     .bin:active { transform: scale(0.92); } 
     .bin span { font-size: 1.8rem; margin-bottom: 2px; }
     
-    /* 这里是垃圾桶的具体颜色代码... (bin-azul 等，请保留原有的样式) */
-
-    /* 大厅网格样式... (其余部分保持原有) */
-
     /* 垃圾桶颜色保持不变... */
     .bin-azul { background: linear-gradient(135deg, #60a5fa, #2563eb); }
     .bin-amarillo { background: linear-gradient(135deg, #fde047, #eab308); color: #854d0e; }
@@ -93,18 +93,18 @@
     .shake-error { animation: shake 0.3s ease-in-out; filter: hue-rotate(300deg); }
 
     /* =========================================
-       ✨ 修改: 帮助按钮位置 (移至左下角，垃圾桶上方)
+       帮助按钮与百科弹窗
        ========================================= */
-       .help-btn { 
+    .help-btn { 
       position: absolute; 
-      bottom: 150px; /* 放在垃圾桶区域的上方 */
-      left: 20px;    /* 放在屏幕左侧 */
+      bottom: 150px; 
+      left: 20px;    
       width: 45px; 
       height: 45px; 
       border-radius: 50%; 
       background: rgba(255,255,255,0.8); 
       backdrop-filter: blur(5px); 
-      border: 2px solid #10b981; /* 加上绿色边框更显眼 */
+      border: 2px solid #10b981; 
       color: #10b981;
       font-size: 1.5rem; 
       display: flex; 
@@ -258,31 +258,31 @@
     ];
   
     const hardTrashDB = [
-      { emoji: "🧻", type: "azul" }, // 纸筒芯
-      { emoji: "🧾", type: "azul" }, // 电影票/收据 
-      { emoji: "🛍️", type: "amarillo" }, // 塑料袋
-      { emoji: "🧃", type: "amarillo" }, // 饮料盒
-      { emoji: "🪵", type: "verde" }, // 碎木片 
-      { emoji: "🥚", type: "verde" }, // 蛋壳 
-      { emoji: "🪫", type: "rojo" }, // 漏液电池 
-      { emoji: "👢", type: "rojo" }  // 皮革靴 
+      { emoji: "🧻", type: "azul" }, 
+      { emoji: "🧾", type: "azul" }, 
+      { emoji: "🛍️", type: "amarillo" }, 
+      { emoji: "🧃", type: "amarillo" }, 
+      { emoji: "🪵", type: "verde" }, 
+      { emoji: "🥚", type: "verde" }, 
+      { emoji: "🪫", type: "rojo" }, 
+      { emoji: "👢", type: "rojo" }  
     ];
   
     // ==========================================
-    // 2. 状态机 (State)
+    // 2. ✨修改 2：状态机引入 Delta Time 物理变量
     // ==========================================
     let state = {
       isRunning: false,
       score: 0,
       lives: 3,
       combo: 0,
-      baseSpeed: 2.0, 
+      baseSpeed: 120, // 改为真实的物理速度：每秒 120 像素 (相当于原来的 2.0 * 60帧)
+      lastTime: 0,    // 用于记录上一帧的真实时间戳
       activeTrash: null, 
       animationFrameId: null,
       hardModeNotified: false 
     };
   
-    // DOM 元素引用
     const stage = document.getElementById('stage');
     const scoreDisplay = document.getElementById('score-display');
     const comboDisplay = document.getElementById('combo-display');
@@ -292,16 +292,21 @@
     const gameContainer = document.getElementById('game-container');
   
     // ==========================================
-    // 3. 游戏主循环 (GPU 硬件加速渲染)
+    // 3. ✨修改 3：彻底解决卡顿变慢的 Delta Time 物理引擎
     // ==========================================
-    function gameLoop() {
+    function gameLoop(currentTime) {
       if (!state.isRunning) return;
   
+      // 计算两帧之间实际流逝的时间（秒）
+      if (state.lastTime === 0) state.lastTime = currentTime;
+      const deltaTime = (currentTime - state.lastTime) / 1000;
+      state.lastTime = currentTime;
+  
       if (state.activeTrash) {
-        state.activeTrash.y += state.activeTrash.speed;
+        // 核心公式：Y坐标 += 速度(像素/秒) * 经过的时间(秒)。就算手机卡帧，路程补足，速度恒定不慢！
+        state.activeTrash.y += state.activeTrash.speed * deltaTime;
         state.activeTrash.element.style.transform = `translate(-50%, ${state.activeTrash.y}px)`;
   
-        // 垃圾掉到地板
         if (state.activeTrash.y > stage.offsetHeight - 50) {
           loseLife();
           removeCurrentTrash();
@@ -313,15 +318,13 @@
     }
   
     // ==========================================
-    // 4. ✨ 智能生成系统：250分门槛 & 激进加速
+    // 4. 智能生成系统：250分门槛 & 激进加速
     // ==========================================
     function spawnTrash() {
       let currentDB = basicTrashDB;
   
-      // 🌟 阈值提升：250 分才会解锁困难库！
       if (state.score >= 250) {
         currentDB = basicTrashDB.concat(hardTrashDB);
-        
         if (!state.hardModeNotified) {
           state.hardModeNotified = true;
           scoreDisplay.style.color = "#ef4444";
@@ -336,41 +339,44 @@
       el.style.transform = `translate(-50%, -100px)`; 
       stage.appendChild(el);
   
-      // 🌟 速度回归最初的硬核设计：
-      // 每 120 分提升 1.0 的速度，极速狂飙，上限开放至 8！
-      let currentSpeed = state.baseSpeed + (state.score / 120);
-      if (currentSpeed > 8) currentSpeed = 8; 
+      // ✨ 速度换算成像素/秒：每 110 分提升 60 像素/秒，极速狂飙，最高封顶 480！
+      let currentSpeed = state.baseSpeed + (state.score / 110) * 60;
+      if (currentSpeed > 480) currentSpeed = 480; 
   
       state.activeTrash = {
         element: el,
         type: randomItem.type,
-        y: -100,
+        y: -100, // 确保Y坐标初始基准点吻合
         speed: currentSpeed
       };
     }
   
     // ==========================================
-    // 5. 交互层：连击与 Fever 狂热判定
+    // 5. ✨修改 4：交互层实现单次边框闪烁
     // ==========================================
     function checkCollision(clickedColor) {
       if (!state.isRunning || !state.activeTrash) return;
   
       if (clickedColor === state.activeTrash.type) {
-        // 答对了
         state.combo++;
         let pointsEarned = state.combo >= 3 ? 20 : 10; 
         state.score += pointsEarned;
         scoreDisplay.innerText = state.score;
         
-        // Fever 特效激活
+        // 狂热状态处理
         if (state.combo >= 3) {
-          gameContainer.classList.add('fever-active', 'fever-effect');
+          gameContainer.classList.add('fever-active'); // 仅触发右上角文字亮起
+          
+          // ✨ 单次边框闪烁特效：添加class，0.25秒后撤销，避免永久耗费GPU
+          gameContainer.classList.add('fever-flash');
+          setTimeout(() => gameContainer.classList.remove('fever-flash'), 250);
+
           comboDisplay.style.opacity = 1;
           comboDisplay.innerText = `x${state.combo} Combo!`;
           scoreDisplay.style.fontSize = "1.8rem";
           setTimeout(()=> scoreDisplay.style.fontSize = "1.5rem", 100);
         } else {
-          gameContainer.classList.remove('fever-active', 'fever-effect');
+          gameContainer.classList.remove('fever-active', 'fever-flash');
           comboDisplay.style.opacity = 0;
         }
         
@@ -379,7 +385,6 @@
         state.activeTrash.element.style.opacity = "0";
         
       } else {
-        // 答错了
         loseLife();
         state.activeTrash.element.innerText = "❌";
       }
@@ -397,10 +402,9 @@
     function loseLife() {
       state.lives--;
       
-      // 断开连击，关闭 Fever
       state.combo = 0; 
       comboDisplay.style.opacity = 0;
-      gameContainer.classList.remove('fever-active', 'fever-effect'); 
+      gameContainer.classList.remove('fever-active', 'fever-flash'); // 清理闪光状态
       
       livesDisplay.innerText = "❤️".repeat(state.lives) + "🖤".repeat(3 - state.lives);
       
@@ -427,12 +431,13 @@
       state.lives = 3; 
       state.combo = 0; 
       state.isRunning = true;
-      state.hardModeNotified = false; // 重置难度锁
+      state.hardModeNotified = false; 
+      state.lastTime = 0; // 重置物理时间锚点
   
       scoreDisplay.innerText = state.score;
       livesDisplay.innerText = "❤️❤️❤️";
       comboDisplay.style.opacity = 0;
-      gameContainer.classList.remove('fever-active', 'fever-effect');
+      gameContainer.classList.remove('fever-active', 'fever-flash');
       
       startScreen.classList.add('hidden');
       gameOverScreen.classList.add('hidden');
@@ -442,7 +447,7 @@
       document.getElementById('player-name').value = '';
   
       spawnTrash();
-      gameLoop();
+      requestAnimationFrame(gameLoop); // 正确请求动画帧以携带时间戳
     }
   
     function triggerGameOver() {
@@ -459,102 +464,89 @@
     }
   
     // ==========================================
-  // 8. 🏆 终极版：全球云端排行榜系统 (Fetch API)
-  // ==========================================
-  
-  const API_URL = "https://script.google.com/macros/s/AKfycbyYu5u6P5I_Qm9-DXydn0UxqkcGTCGx1e-Cxv4rhmHQrSE7xVF9LKylhFfA0AyiOyj1og/exec"; 
+    // 8. 全球云端排行榜系统 (Fetch API) 
+    // ==========================================
+    const API_URL = "https://script.google.com/macros/s/AKfycbyYu5u6P5I_Qm9-DXydn0UxqkcGTCGx1e-Cxv4rhmHQrSE7xVF9LKylhFfA0AyiOyj1og/exec"; 
 
-// 发送分数到云端 (异步请求)
-async function saveScore() {
-  const nameInput = document.getElementById('player-name');
-  const submitBtn = document.querySelector('#submit-section .btn-secondary');
-  const name = nameInput.value.trim() || "Anónimo";
-  const currentScore = state.score;
+    async function saveScore() {
+      const nameInput = document.getElementById('player-name');
+      const submitBtn = document.querySelector('#submit-section .btn-secondary');
+      const name = nameInput.value.trim() || "Anónimo";
+      const currentScore = state.score;
 
-  // UX 优化：让玩家知道数据正在发送
-  submitBtn.innerText = "Enviando... 🚀";
-  submitBtn.disabled = true;
-  nameInput.disabled = true;
+      submitBtn.innerText = "Enviando... 🚀";
+      submitBtn.disabled = true;
+      nameInput.disabled = true;
 
-  try {
-    // 向谷歌服务器发射数据包裹 (POST)
-    const saveUrl = `${API_URL}?action=save&name=${encodeURIComponent(name)}&score=${currentScore}`;
-      await fetch(saveUrl);
-    
-    // 发送成功后：隐藏输入框，重新向服务器请求最新的排行榜
-    document.getElementById('submit-section').style.display = 'none';
-    renderLeaderboard();
-  } catch (error) {
-    console.error("Error al guardar:", error);
-    alert("Error de conexión. Revisa tu internet e inténtalo de nuevo.");
-    submitBtn.innerText = "Guardar";
-    submitBtn.disabled = false;
-    nameInput.disabled = false;
-  }
-}
-
-// 从云端读取前 30 名数据 (异步请求)
-async function renderLeaderboard() {
-  const list = document.getElementById('leaderboard-list');
-  
-  // UX 优化：在等待网络时显示加载动画
-  list.innerHTML = '<li style="justify-content:center; color:#6b7280;">Cargando datos del servidor... ⏳</li>';
-
-  try {
-    // 向谷歌服务器请求数据 (GET)
-    const response = await fetch(API_URL);
-    const records = await response.json();
-
-    list.innerHTML = ''; // 清空加载提示
-
-    if (records.length === 0) {
-      list.innerHTML = '<li style="justify-content:center; color:#9ca3af;">Aún no hay récords. ¡Sé el primero!</li>';
-      return;
+      try {
+        const saveUrl = `${API_URL}?action=save&name=${encodeURIComponent(name)}&score=${currentScore}`;
+        await fetch(saveUrl);
+        
+        document.getElementById('submit-section').style.display = 'none';
+        renderLeaderboard();
+      } catch (error) {
+        console.error("Error al guardar:", error);
+        alert("Error de conexión. Revisa tu internet e inténtalo de nuevo.");
+        submitBtn.innerText = "Guardar";
+        submitBtn.disabled = false;
+        nameInput.disabled = false;
+      }
     }
 
-    // 渲染排行榜 (支持滑动的前 30 名)
-    records.forEach((record, index) => {
-      let rankClass = "";
-      let medal = `${index + 1}.`;
-      if (index === 0) { rankClass = "rank-1"; medal = "🥇"; }
-      if (index === 1) { rankClass = "rank-2"; medal = "🥈"; }
-      if (index === 2) { rankClass = "rank-3"; medal = "🥉"; }
+    async function renderLeaderboard() {
+      const list = document.getElementById('leaderboard-list');
+      list.innerHTML = '<li style="justify-content:center; color:#6b7280;">Cargando datos del servidor... ⏳</li>';
 
-      const li = document.createElement('li');
-      li.innerHTML = `<span class="${rankClass}">${medal} ${record.name}</span> <span style="font-weight:bold;">${record.score} pts</span>`;
-      list.appendChild(li);
-    });
-  } catch (error) {
-    console.error("Error al cargar:", error);
-    list.innerHTML = '<li style="justify-content:center; color:#ef4444;">Error al conectar con la base de datos. 🔌</li>';
-  }
-}
+      try {
+        const response = await fetch(API_URL);
+        const records = await response.json();
 
-// 游戏初始化时，自动拉取一次云端排行榜
-renderLeaderboard();
+        list.innerHTML = ''; 
+
+        if (records.length === 0) {
+          list.innerHTML = '<li style="justify-content:center; color:#9ca3af;">Aún no hay récords. ¡Sé el primero!</li>';
+          return;
+        }
+
+        records.forEach((record, index) => {
+          let rankClass = "";
+          let medal = `${index + 1}.`;
+          if (index === 0) { rankClass = "rank-1"; medal = "🥇"; }
+          if (index === 1) { rankClass = "rank-2"; medal = "🥈"; }
+          if (index === 2) { rankClass = "rank-3"; medal = "🥉"; }
+
+          const li = document.createElement('li');
+          li.innerHTML = `<span class="${rankClass}">${medal} ${record.name}</span> <span style="font-weight:bold;">${record.score} pts</span>`;
+          list.appendChild(li);
+        });
+      } catch (error) {
+        console.error("Error al cargar:", error);
+        list.innerHTML = '<li style="justify-content:center; color:#ef4444;">Error al conectar con la base de datos. 🔌</li>';
+      }
+    }
+
+    renderLeaderboard();
 
     // ==========================================
-  // 9. 知识库百科控制
-  // ==========================================
-  const codexScreen = document.getElementById('codex-screen');
-  function openCodex() {
-    // 如果游戏正在进行中，点击问号可以暂停游戏！
-    if (state.isRunning) {
-      state.isRunning = false;
-      cancelAnimationFrame(state.animationFrameId);
+    // 9. 知识库百科控制
+    // ==========================================
+    const codexScreen = document.getElementById('codex-screen');
+    function openCodex() {
+      if (state.isRunning) {
+        state.isRunning = false;
+        cancelAnimationFrame(state.animationFrameId);
+      }
+      codexScreen.classList.remove('hidden');
     }
-    codexScreen.classList.remove('hidden');
-  }
-  
-  function closeCodex() {
-    codexScreen.classList.add('hidden');
-    // 如果是从游戏中途打开的，关闭后恢复游戏
-    if (!startScreen.classList.contains('hidden') === false && !gameOverScreen.classList.contains('hidden') === false) {
-      state.isRunning = true;
-      gameLoop();
+    
+    function closeCodex() {
+      codexScreen.classList.add('hidden');
+      if (!startScreen.classList.contains('hidden') === false && !gameOverScreen.classList.contains('hidden') === false) {
+        state.isRunning = true;
+        state.lastTime = 0; // 重置时间以防止瞬间瞬移
+        requestAnimationFrame(gameLoop);
+      }
     }
-  }
   </script>
-
 </body>
 </html>
