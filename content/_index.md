@@ -3,7 +3,7 @@ title: "Eco.Voces"
 layout: "simple"
 ---
 
-{{< slider media="media/001.png,media/002.png,media/003.png" >}}
+{{< slider media="media/Slider 1.jpg,media/Slider 2.jpg,media/Slider 3.jpg,media/Slider 4.jpg" >}}
 
 
 {{< quicknav >}}
@@ -14,11 +14,11 @@ layout: "simple"
 
 <h2 id="descripcion" style="text-align: center; margin-top: 4rem; margin-bottom: 3rem; font-size: 2.5rem;"></h2>
 
-{{< description title="Protegiendo Nuestro Entorno" media="media/001.png" >}}
+{{< description title="Protegiendo Nuestro Entorno" media="media/001.jpg" >}}
 Como estudiantes, entendemos que la tecnología y la naturaleza deben coexistir en perfecto equilibrio. Nuestro proyecto busca generar conciencia sobre los ecosistemas locales, desde nuestras costas hasta nuestras comunidades urbanas. Cada pequeña acción, sumada, genera un impacto sistémico positivo.
 {{< /description >}}
 
-{{< description title="Tecnología para el Cambio" media="media/002.png" reverse="true" >}}
+{{< description title="Tecnología para el Cambio" media="media/002.jpg" reverse="true" >}}
 No solo hablamos de ecología; aplicamos el pensamiento estructurado para resolver problemas ambientales. A través de Eco.Voces, combinamos análisis de datos, interactividad y educación digital para empoderar a nuestra comunidad y construir un futuro más sostenible.
 {{< /description >}}
 
