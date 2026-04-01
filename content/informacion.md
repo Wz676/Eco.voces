@@ -22,7 +22,7 @@ layout: "simple"
   {{< /description >}}
 
 
-  {{< description title="Conoce nuestros 4 módulos principales:" media="media/Informacion2.jpeg" >}}
+  {{< description title="Conoce nuestros 4 módulos principales:" media="media/informacion4.jpg" >}}
  
   {{< /description >}}
 
@@ -30,7 +30,7 @@ layout: "simple"
   ¿Qué pasa después de que depositas un envase en el muro? Aquí entra en juego la verdadera innovación. A través de procesos eficientes y tecnología, cerramos el ciclo de los materiales:
   {{< /description >}}
 
-  {{< description title="Tecnología para el Cambio" media="media/" >}}
+  {{< description title="Tecnología para el Cambio" media="media/002.jpg" >}}
   No solo hablamos de ecología; aplicamos el pensamiento estructurado para resolver problemas. En esta sección compartiremos nuestras métricas, reportes de impacto ambiental y artículos educativos para empoderar a la comunidad.
   {{< /description >}}
 
