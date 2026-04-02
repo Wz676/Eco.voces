@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Muro de Notas Ecológicas</title>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&display=swap" rel="stylesheet">
   <style>
     /* =========================================
        1. 全局重置与背景
@@ -81,11 +82,11 @@
     }
 
     .post-it-text {
-      font-size: 1rem;
+      font-size: 1.2rem; 
       color: #1f2937;
-      line-height: 1.4;
-      margin-bottom: 10px;
-      font-family: 'Comic Sans MS', 'Caveat', cursive, sans-serif; 
+      line-height: 1.35;
+      margin-bottom: 12px;
+      font-family: 'Caveat', cursive; 
       white-space: normal;
       overflow-wrap: break-word;
       word-break: break-word;
@@ -123,8 +124,9 @@
       transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       user-select: none;
     }
+    /* 点赞后的激活状态样式 */
     .like-btn.active {
-      color: #ef4444;
+      color: #ef4444 !important; 
       background-color: rgba(239, 68, 68, 0.1);
       transform: scale(1.1);
     }
@@ -237,11 +239,13 @@
 
     function getMyLikes() {
       const saved = localStorage.getItem('my_eco_likes');
-      return saved ? JSON.parse(saved) : [];
+      // ✨ 统一转换为字符串数组，防止类型匹配失败
+      return saved ? JSON.parse(saved).map(String) : [];
     }
 
     function saveMyLikes(list) {
-      localStorage.setItem('my_eco_likes', JSON.stringify(list));
+      // ✨ 保存时也强制转换为字符串
+      localStorage.setItem('my_eco_likes', JSON.stringify(list.map(String)));
     }
 
     // ==========================================
@@ -275,7 +279,7 @@
       [...cloudDB].reverse().forEach((note) => {
         const randomRotate = (Math.random() * 8 - 4).toFixed(1);
         const randomScale = (Math.random() * 0.1 + 0.95).toFixed(2);
-        const isLiked = myLikes.includes(note.id);
+        const isLiked = myLikes.includes(String(note.id));
         
         const noteEl = document.createElement('div');
         noteEl.className = `post-it ${note.color}`;
@@ -300,8 +304,9 @@
     // 4. 点赞核心逻辑 (Optimistic UI + POST)
     // ==========================================
     function toggleLike(id) {
+      id = String(id); // 强制转化为字符串处理
       let myLikes = getMyLikes();
-      const note = cloudDB.find(n => n.id == id);
+      const note = cloudDB.find(n => String(n.id) === id); // 强制比对字符串
       if (!note) return;
 
       const countEl = document.getElementById(`count-${id}`);
