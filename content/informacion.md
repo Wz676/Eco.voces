@@ -1,7 +1,7 @@
 ---
 title: "Información y Visión"
 date: 2026-03-17
-description: "Conoce más sobre nuestro proyecto de reciclaje en la UBA."
+description: ""
 layout: "simple"
 ---
 

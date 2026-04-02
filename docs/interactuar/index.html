@@ -216,7 +216,7 @@
     
     
     "mainEntityOfPage": "true",
-    "wordCount": "44"
+    "wordCount": "69"
   }]
   </script>
 
@@ -668,6 +668,19 @@
     <div class="card-title">Juego: Eco.Clasificador</div>
     <div class="card-desc">Pon a prueba tus reflejos separando la basura. ¡Salva el planeta!</div>
   </div>
+
+
+  <div class="action-card" onclick="openModal('calc-modal')">
+    <div class="card-icon">👣</div>
+    <div class="card-title">Huella de Carbono</div>
+    <div class="card-desc">Descubre tu impacto ambiental y aprende a reducirlo.</div>
+  </div>
+
+  <div class="action-card" onclick="openModal('wall-modal')">
+    <div class="card-icon">📌</div>
+    <div class="card-title">Muro de Compromisos</div>
+    <div class="card-desc">Comparte tu promesa ecológica con la comunidad.</div>
+  </div>
 </div>
 
 <div id="survey-modal" class="modal-overlay">
@@ -681,6 +694,20 @@
   <div class="modal-content">
     <span class="close-btn" onclick="closeModal('game-modal')">&times;</span>
     <iframe src="/Eco.voces/juego/index.html" class="app-iframe"></iframe>
+  </div>
+</div>
+
+<div id="calc-modal" class="modal-overlay">
+  <div class="modal-content">
+    <span class="close-btn" onclick="closeModal('calc-modal')">&times;</span>
+    <iframe src="/Eco.voces/calculadora/index.html" class="app-iframe"></iframe>
+  </div>
+</div>
+
+<div id="wall-modal" class="modal-overlay">
+  <div class="modal-content">
+    <span class="close-btn" onclick="closeModal('wall-modal')">&times;</span>
+    <iframe src="/Eco.voces/muro/index.html" class="app-iframe"></iframe>
   </div>
 </div>
 

@@ -134,56 +134,62 @@
   <div class="help-btn" onclick="openCodex()">❓</div>
 
   <div id="codex-screen" class="screen-overlay hidden" style="z-index: 200;">
-    <div class="codex-content">
-      <span class="codex-close" onclick="closeCodex()">✖</span>
-      <h2 style="color: #10b981; margin-bottom: 5px; font-size: 1.5rem;">Guía de Reciclaje</h2>
-      <p style="color: #6b7280; font-size: 0.9rem; margin-bottom: 20px;">Conoce los objetos y sus categorías.</p>
-
-      <div class="codex-section">
-        <div class="codex-title" style="color: #3b82f6;">🟦 Papel y Cartón</div>
-        <div class="codex-grid">
-          <div class="codex-item"><span>🗞️</span>Periódico</div>
-          <div class="codex-item"><span>📦</span>Cartón</div>
-          <div class="codex-item"><span>📄</span>Hojas de Papel</div>
-          <div class="codex-item"><span>🧻</span>Papel<div class="codex-badge">Avanzado</div></div>
-          <div class="codex-item"><span>🧾</span>Recibo<div class="codex-badge">Avanzado</div></div>
-        </div>
-      </div>
-
-      <div class="codex-section">
-        <div class="codex-title" style="color: #eab308;">🟨 Plástico y Lata</div>
-        <div class="codex-grid">
-          <div class="codex-item"><span>🥤</span>Vaso Plástico</div>
-          <div class="codex-item"><span>🧴</span>Envase Plástico</div>
-          <div class="codex-item"><span>🥫</span>Lata</div>
-          <div class="codex-item"><span>🛍️</span>Bolsa plástica<div class="codex-badge">Avanzado</div></div>
-          <div class="codex-item"><span>🧃</span>Cartón de Jugo<div class="codex-badge">Avanzado</div></div>
-        </div>
-      </div>
-
-      <div class="codex-section">
-        <div class="codex-title" style="color: #22c55e;">🟩 Orgánico</div>
-        <div class="codex-grid">
-          <div class="codex-item"><span>🍎</span>Manzana</div>
-          <div class="codex-item"><span>🍌</span>Banana</div>
-          <div class="codex-item"><span>🍂</span>Hojas Secas</div>
-          <div class="codex-item"><span>🪵</span>Madera<div class="codex-badge">Avanzado</div></div>
-          <div class="codex-item"><span>🥚</span>Cáscara de Huevo<div class="codex-badge">Avanzado</div></div>
-        </div>
-      </div>
-
-      <div class="codex-section">
-        <div class="codex-title" style="color: #ef4444;">🟥 Peligroso</div>
-        <div class="codex-grid">
-          <div class="codex-item"><span>🔋</span>Pila</div>
-          <div class="codex-item"><span>📱</span>Móvil</div>
-          <div class="codex-item"><span>💡</span>Bombillo</div>
-          <div class="codex-item"><span>🪫</span>Batería rota<div class="codex-badge">Peligro</div></div>
-          <div class="codex-item"><span>👢</span>Zapato/Cuero<div class="codex-badge">Especial</div></div>
-        </div>
-      </div>
+    <div class="codex-content" style="padding: 0; overflow: hidden; display: flex; flex-direction: column;">
       
-    </div>
+      <div style="padding: 20px 20px 15px 20px; border-bottom: 2px solid #f3f4f6; background: white; flex-shrink: 0; position: relative;">
+        <span class="codex-close" onclick="closeCodex()" style="position: absolute; top: 18px; right: 20px; z-index: 30; background: #f3f4f6; width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; border-radius: 50%; box-shadow: 0 2px 5px rgba(0,0,0,0.1); color: #4b5563; font-size: 1.2rem; cursor: pointer;">✖</span>
+        
+        <h2 style="color: #10b981; margin-bottom: 5px; font-size: 1.5rem; padding-right: 30px;">Guía de Reciclaje</h2>
+        <p style="color: #6b7280; font-size: 0.9rem; margin-bottom: 0;">Conoce los objetos y sus categorías.</p>
+      </div>
+
+      <div style="padding: 20px; overflow-y: auto; flex-grow: 1;">
+        
+        <div class="codex-section">
+          <div class="codex-title" style="color: #3b82f6;">🟦 Papel y Cartón</div>
+          <div class="codex-grid">
+            <div class="codex-item"><span>🗞️</span>Periódico</div>
+            <div class="codex-item"><span>📦</span>Cartón</div>
+            <div class="codex-item"><span>📄</span>Hojas de Papel</div>
+            <div class="codex-item"><span>🧻</span>Papel<div class="codex-badge rank-safe">Avanzado</div></div>
+            <div class="codex-item"><span>🧾</span>Recibo<div class="codex-badge rank-hard">Avanzado</div></div>
+          </div>
+        </div>
+
+        <div class="codex-section">
+          <div class="codex-title" style="color: #eab308;">🟨 Plástico y Lata</div>
+          <div class="codex-grid">
+            <div class="codex-item"><span>🥤</span>Vaso Plástico</div>
+            <div class="codex-item"><span>🧴</span>Envase Plástico</div>
+            <div class="codex-item"><span>🥫</span>Lata</div>
+            <div class="codex-item"><span>🛍️</span>Bolsa plástica<div class="codex-badge rank-safe">Avanzado</div></div>
+            <div class="codex-item"><span>🧃</span>Cartón de Jugo<div class="codex-badge rank-trap">Avanzado</div></div>
+          </div>
+        </div>
+
+        <div class="codex-section">
+          <div class="codex-title" style="color: #22c55e;">🟩 Orgánico</div>
+          <div class="codex-grid">
+            <div class="codex-item"><span>🍎</span>Manzana</div>
+            <div class="codex-item"><span>🍌</span>Banana</div>
+            <div class="codex-item"><span>🍂</span>Hojas Secas</div>
+            <div class="codex-item"><span>🪵</span>Madera<div class="codex-badge rank-safe">Avanzado</div></div>
+            <div class="codex-item"><span>🥚</span>Cáscara de Huevo<div class="codex-badge rank-safe">Avanzado</div></div>
+          </div>
+        </div>
+
+        <div class="codex-section">
+          <div class="codex-title" style="color: #ef4444;">🟥 Peligroso</div>
+          <div class="codex-grid">
+            <div class="codex-item"><span>🔋</span>Pila</div>
+            <div class="codex-item"><span>📱</span>Móvil</div>
+            <div class="codex-item"><span>💡</span>Bombillo</div>
+            <div class="codex-item"><span>🪫</span>Batería rota<div class="codex-badge rank-trap">Peligro</div></div>
+            <div class="codex-item"><span>👢</span>Zapato/Cuero<div class="codex-badge rank-safe">Especial</div></div>
+          </div>
+        </div>
+
+      </div> </div>
   </div>
   
   <div id="hud">
