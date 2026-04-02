@@ -41,10 +41,6 @@
 
 
 
-<h2 style="color: var(--c-blue); font-size: 1.5rem;">Metodología de Cálculo</h2>
-        <p style="color: var(--text-muted); font-size: 0.9rem;">Cómo auditamos tu impacto ambiental.</p>
-      </div>
-      <div class="modal-body">
         <p style="margin-bottom: 15px;">Los valores de cada opción representan un estimado en <strong>kg CO₂e / mes</strong>. Las opciones en blanco ("-- Seleccionar --") se omiten del cálculo para mayor flexibilidad.</p>
         
         <div class="info-section">
@@ -116,10 +112,8 @@
   </div>
 
 
-  <h2 style="color: var(--c-blue); font-size: 1.5rem;">Metodología de Cálculo</h2>
-        <p style="color: var(--text-muted); font-size: 0.9rem;">Modelado detallado de tu impacto ambiental.</p>
-      </div>
-      <div class="modal-body">
+
+
         <p style="margin-bottom: 15px;">Nuestra calculadora se basa en factores de emisión (LCA). Las opciones en blanco ("-- Seleccionar --") asumen un impacto neutral (0) para no forzar datos.</p>
         
         <div class="info-section">
@@ -150,9 +144,8 @@
     </div>
   </div>
 
-  <h2 style="color: var(--c-blue); font-size: 1.5rem;">Metodología LCA Completa</h2>
-        <p style="color: var(--text-muted); font-size: 0.9rem;">Modelado detallado de tu impacto ambiental.</p>
-      </div>
+
+
       <div class="modal-body">
         <p style="margin-bottom: 15px;">Evaluamos tu huella de carbono utilizando múltiples factores de emisión científica. Las opciones en blanco ("-- Seleccionar --") asumen un impacto neutral (0).</p>
         
