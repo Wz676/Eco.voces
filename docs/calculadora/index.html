@@ -60,7 +60,16 @@
     /* =========================================
        3. 模块化网格 (折叠手风琴样式)
        ========================================= */
-    .dashboard { max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; padding: 0 20px; }
+    .dashboard { 
+      max-width: 800px; 
+      margin: 0 auto; 
+      display: flex; 
+      flex-direction: column; 
+      gap: 20px; 
+      
+      /* ✨ 核心修复：将底部的 padding 增加到 100px，留出巨大的呼吸空间 */
+      padding: 0 20px 100px 20px; 
+    }
     
     .module-card { 
       /* ✨ 核心修复 2: 移除毛玻璃和 translateZ，使用 98% 纯白，彻底消灭抖动和背景闪烁 */
@@ -166,13 +175,19 @@
       <div class="modal-body">
         <p style="margin-bottom: 15px;">Evaluamos tu huella de carbono utilizando múltiples factores de emisión científica. Las opciones en blanco ("-- Seleccionar --") asumen un impacto neutral (0).</p>
         
+
+        <div class="info-section">
+          <h3>🧮 Fórmula General</h3>
+          <div class="formula-box">Emisión = Actividad × Factor (EF)</div>
+          <p style="font-size: 0.9rem;">Multiplicamos tu nivel de actividad por un factor de emisión preestablecido (kg CO₂e/unidad).</p>
+        </div>
         <div class="info-section">
           <h3>🚗 Movilidad</h3>
-          <p style="font-size: 0.9rem;">Calculamos tu viaje diario y los viajes interurbanos. El Carpooling o usar transporte público reduce las emisiones drásticamente frente al vehículo privado.</p>
+          <p style="font-size: 0.9rem;">Calculamos tu viaje diario y los viajes interurbanos. La distancia se multiplica por 2 (ida y vuelta), los días a la semana y luego por 4.33 (semanas del mes). El Carpooling o usar transporte público reduce las emisiones drásticamente frente al vehículo privado.</p>
         </div>
         <div class="info-section">
           <h3>🥩 Alimentación</h3>
-          <p style="font-size: 0.9rem;">Incluye el tipo de carne, consumo de lácteos, desperdicio de comida y si usas cocina eléctrica o a gas (cada uno con un factor de emisión distinto).</p>
+          <p style="font-size: 0.9rem;">Incluye el tipo de carne, consumo de lácteos, desperdicio de comida y si usas cocina eléctrica o a gas (cada uno con un factor de emisión distinto). La carne roja tiene una de las huellas de carbono más altas (aprox. 27 kg CO₂e por kg de carne) debido al metano ganadero y la deforestación.</p>
         </div>
         <div class="info-section">
           <h3>⚡ Energía en el Hogar</h3>
@@ -184,7 +199,7 @@
         </div>
         <div class="info-section">
           <h3>📱 Huella Digital</h3>
-          <p style="font-size: 0.9rem;">El streaming, videollamadas con cámara, servidores en la nube y el uso de Inteligencia Artificial requieren enormes centros de datos y refrigeración constante.</p>
+          <p style="font-size: 0.9rem;">El streaming, videollamadas con cámara, servidores en la nube y el uso de Inteligencia Artificial requieren enormes centros de datos y refrigeración constante. Los centros de datos consumen inmensas cantidades de energía. 1 hora de streaming en HD genera aprox. 50-100 gramos de CO₂e.</p>
         </div>
         <div class="info-section">
           <h3>🌱 Rutina y Estilo de Vida</h3>
@@ -260,7 +275,7 @@
       <div class="module-header" onclick="toggleCard(this)">
         <div class="module-header-left">
           <span class="module-icon">🥩</span>
-          <h2 class="module-title">Alimentación y Dieta</h2>
+          <h2 class="module-title">Alimentación</h2>
         </div>
         <span class="chevron">▼</span>
       </div>
@@ -315,7 +330,7 @@
       <div class="module-header" onclick="toggleCard(this)">
         <div class="module-header-left">
           <span class="module-icon">⚡</span>
-          <h2 class="module-title">Energía y Electrodomésticos</h2>
+          <h2 class="module-title">Energía en el Hogar</h2>
         </div>
         <span class="chevron">▼</span>
       </div>
@@ -437,7 +452,7 @@
       <div class="module-header" onclick="toggleCard(this)">
         <div class="module-header-left">
           <span class="module-icon">📱</span>
-          <h2 class="module-title">Huella Digital y Tech</h2>
+          <h2 class="module-title">Huella Digital</h2>
         </div>
         <span class="chevron">▼</span>
       </div>
@@ -460,7 +475,7 @@
           <select id="dig-ai" class="calc-input">
             <option value="0" selected>-- Seleccionar --</option>
             <option value="1">Casi no la uso</option>
-            <option value="5">Uso diario de texto (Consultas simples)</option>
+            <option value="5">Uso diario de texto</option>
             <option value="15">Generación intensiva de imágenes/videos por IA</option>
           </select>
         </div>
