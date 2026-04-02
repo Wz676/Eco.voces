@@ -33,27 +33,76 @@
     .status-bar-fill { height: 100%; width: 0%; background: var(--c-green); border-radius: 10px; transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.4s ease; }
 
     /* =========================================
-       3. 模块化网格布局
+       3. 模块化网格 (折叠手风琴样式)
        ========================================= */
-    .dashboard { max-width: 1000px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; padding: 0 20px; }
+    .dashboard { max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; padding: 0 20px; }
     
-    .module-card { background: var(--card-bg); backdrop-filter: blur(10px); border: 1px solid var(--card-border); border-radius: 20px; padding: 25px; box-shadow: 0 10px 20px rgba(0,0,0,0.02); }
-    .module-header { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; border-bottom: 2px solid #f1f5f9; padding-bottom: 10px; }
+    .module-card { 
+      background: var(--card-bg); 
+      backdrop-filter: blur(10px); 
+      -webkit-backdrop-filter: blur(10px); /* 兼容 Safari */
+      border: 1px solid var(--card-border); 
+      border-radius: 20px; 
+      box-shadow: 0 10px 20px rgba(0,0,0,0.02); 
+      overflow: hidden; 
+      transition: box-shadow 0.3s; 
+      
+      /* ✨ 核心修复：强制 GPU 硬件加速，防止滚动闪烁和白框溢出 */
+      transform: translateZ(0);
+      -webkit-transform: translateZ(0);
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+    }
+    .module-card:hover { box-shadow: 0 15px 30px rgba(0,0,0,0.05); }
+    
+    .module-header { display: flex; justify-content: space-between; align-items: center; padding: 20px 25px; cursor: pointer; user-select: none; background: rgba(255,255,255,0.5); transition: background 0.2s; }
+    .module-header:hover { background: rgba(255,255,255,0.9); }
+    .module-header-left { display: flex; align-items: center; gap: 15px; }
     .module-icon { font-size: 1.8rem; }
     .module-title { font-size: 1.2rem; font-weight: bold; color: var(--text-main); }
+    .chevron { font-size: 1.2rem; color: #94a3b8; transition: transform 0.3s ease; }
+    
+    .module-content { display: none; padding: 5px 25px 25px 25px; border-top: 1px solid #f1f5f9; }
 
     /* =========================================
        4. 表单与交互组件
        ========================================= */
-    .input-group { margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px dashed #e2e8f0; }
+    .input-group { margin-top: 20px; padding-bottom: 15px; border-bottom: 1px dashed #e2e8f0; }
     .input-group:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
     .input-label { display: flex; justify-content: space-between; font-size: 0.95rem; font-weight: 600; color: #475569; margin-bottom: 12px; }
     .val-display { color: var(--c-blue); font-weight: bold; }
 
-    input[type=range] { -webkit-appearance: none; width: 100%; background: transparent; }
-    input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; height: 20px; width: 20px; border-radius: 50%; background: var(--c-blue); cursor: pointer; margin-top: -6px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
-    input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 8px; cursor: pointer; background: #cbd5e1; border-radius: 5px; }
-    input[type=range]:focus { outline: none; }
+    input[type=range] { 
+      -webkit-appearance: none; 
+      appearance: none; /* ✨ 加上这一行，满足标准兼容性，消除警告 */
+      width: 100%; 
+      background: transparent; 
+      touch-action: pan-y; 
+    }
+    
+    input[type=range]::-webkit-slider-thumb { 
+      -webkit-appearance: none; 
+      appearance: none; /* ✨ 加上这一行 */
+      height: 20px; 
+      width: 20px; 
+      border-radius: 50%; 
+      background: var(--c-blue); 
+      cursor: pointer; 
+      margin-top: -6px; 
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2); 
+    }
+    
+    input[type=range]::-webkit-slider-runnable-track { 
+      width: 100%; 
+      height: 8px; 
+      cursor: pointer; 
+      background: #cbd5e1; 
+      border-radius: 5px; 
+    }
+    
+    input[type=range]:focus { 
+      outline: none; 
+    }
 
     select { width: 100%; padding: 12px 10px; border-radius: 8px; border: 2px solid #cbd5e1; background: white; font-size: 0.95rem; color: var(--text-main); outline: none; transition: border-color 0.2s; cursor: pointer; }
     select:focus { border-color: var(--c-blue); }
@@ -68,12 +117,11 @@
     .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); display: flex; justify-content: center; align-items: center; z-index: 200; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
     .modal-overlay.active { opacity: 1; pointer-events: auto; }
     
-    .modal-content { background: white; width: 90%; max-width: 600px; height: 80vh; border-radius: 20px; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.2); transform: translateY(20px); transition: transform 0.3s; }
-    .modal-overlay.active .modal-content { transform: translateY(0); }
+    .modal-content-box { background: white; width: 90%; max-width: 600px; height: 80vh; border-radius: 20px; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.2); transform: translateY(20px); transition: transform 0.3s; }
+    .modal-overlay.active .modal-content-box { transform: translateY(0); }
 
     .modal-header { padding: 20px 20px 15px 20px; border-bottom: 2px solid #f1f5f9; background: white; flex-shrink: 0; position: relative; }
     .modal-close { position: absolute; top: 15px; right: 20px; background: #f1f5f9; width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; border-radius: 50%; color: #64748b; font-size: 1.2rem; cursor: pointer; font-weight: bold; }
-    
     .modal-body { padding: 25px 20px; overflow-y: auto; flex-grow: 1; color: #334155; line-height: 1.6; }
     .info-section { margin-bottom: 25px; background: #f8fafc; padding: 15px; border-radius: 12px; border: 1px solid #e2e8f0; }
     .info-section h3 { color: var(--text-main); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
@@ -91,38 +139,38 @@
   <div class="help-btn" onclick="openModal()">❓</div>
 
   <div class="modal-overlay" id="info-modal">
-    <div class="modal-content">
+    <div class="modal-content-box">
       <div class="modal-header">
         <span class="modal-close" onclick="closeModal()">✖</span>
-        <h2 style="color: var(--c-blue); font-size: 1.5rem;">Metodología de Cálculo</h2>
+        <h2 style="color: var(--c-blue); font-size: 1.5rem;">Metodología LCA Completa</h2>
         <p style="color: var(--text-muted); font-size: 0.9rem;">Modelado detallado de tu impacto ambiental.</p>
       </div>
       <div class="modal-body">
-        <p style="margin-bottom: 15px;">Nuestra calculadora se basa en factores de emisión (LCA). Las opciones en blanco ("-- Seleccionar --") asumen un impacto neutral (0) para no forzar datos.</p>
+        <p style="margin-bottom: 15px;">Evaluamos tu huella de carbono utilizando múltiples factores de emisión científica. Las opciones en blanco ("-- Seleccionar --") asumen un impacto neutral (0).</p>
         
         <div class="info-section">
           <h3>🚗 Movilidad</h3>
-          <p style="font-size: 0.9rem;">Compartir auto (Carpooling) reduce las emisiones a la mitad. Los vehículos eléctricos o motos son más eficientes que un vehículo a gasolina con un solo pasajero.</p>
+          <p style="font-size: 0.9rem;">Calculamos tu viaje diario y los viajes interurbanos. El Carpooling o usar transporte público reduce las emisiones drásticamente frente al vehículo privado.</p>
         </div>
         <div class="info-section">
           <h3>🥩 Alimentación</h3>
-          <p style="font-size: 0.9rem;">Además de la carne roja, los <strong>lácteos y quesos</strong> tienen una huella gigantesca por la industria ganadera. Reducir su frecuencia es clave.</p>
+          <p style="font-size: 0.9rem;">Incluye el tipo de carne, consumo de lácteos, desperdicio de comida y si usas cocina eléctrica o a gas (cada uno con un factor de emisión distinto).</p>
         </div>
         <div class="info-section">
-          <h3>⚡ Energía</h3>
-          <p style="font-size: 0.9rem;">El uso de secadoras de ropa térmicas y calentadores de agua representan picos masivos de consumo eléctrico en el hogar.</p>
+          <h3>⚡ Energía en el Hogar</h3>
+          <p style="font-size: 0.9rem;">El A/C, lavadoras, calentadores de agua y refrigeradores viejos son los mayores consumidores. Aplicamos la regla de "Roommates" para dividir el impacto si vives acompañado.</p>
         </div>
         <div class="info-section">
           <h3>♻️ Consumo y Residuos</h3>
-          <p style="font-size: 0.9rem;">Aplicamos bonos de <strong>Carbon Offset (números negativos)</strong> no solo al reciclaje, sino también al <strong>Compostaje</strong>, ya que evita la generación de metano en los vertederos.</p>
+          <p style="font-size: 0.9rem;">Comprar fast fashion o bolsas plásticas suma emisiones. Separar la basura, reciclar E-waste y hacer compostaje otorgan <strong>bonos verdes (números negativos)</strong>.</p>
         </div>
         <div class="info-section">
           <h3>📱 Huella Digital</h3>
-          <p style="font-size: 0.9rem;">Las videollamadas con cámara encendida consumen 10 veces más ancho de banda (y energía en servidores) que usar solo audio.</p>
+          <p style="font-size: 0.9rem;">El streaming, videollamadas con cámara, servidores en la nube y el uso de Inteligencia Artificial requieren enormes centros de datos y refrigeración constante.</p>
         </div>
         <div class="info-section">
-          <h3>🏢 Estudio y Trabajo</h3>
-          <p style="font-size: 0.9rem;">Los hábitos diarios como usar el ascensor en lugar de las escaleras, o consumir café en vasos desechables, generan un impacto silencioso pero acumulativo a lo largo del año.</p>
+          <h3>🌱 Rutina y Estilo de Vida</h3>
+          <p style="font-size: 0.9rem;">Desde los empaques de tu almuerzo, el uso de papel en el trabajo/estudio, hasta el impacto de mascotas grandes y el uso de ascensores en tu rutina diaria.</p>
         </div>
       </div>
     </div>
@@ -149,230 +197,369 @@
   <main class="dashboard">
 
     <section class="module-card">
-      <div class="module-header">
-        <span class="module-icon">🚗</span>
-        <h2 class="module-title">Movilidad</h2>
+      <div class="module-header" onclick="toggleCard(this)">
+        <div class="module-header-left">
+          <span class="module-icon">🚗</span>
+          <h2 class="module-title">Movilidad y Viajes</h2>
+        </div>
+        <span class="chevron">▼</span>
       </div>
-      <div class="input-group">
-        <div class="input-label">Medio principal de transporte</div>
-        <select id="mov-type" class="calc-input">
-          <option value="0" selected>-- Seleccionar --</option>
-          <option value="0">Caminando / Bicicleta (0 kg)</option>
-          <option value="0.05">Transporte Público (Autobús/Metro)</option>
-          <option value="0.08">Vehículo Eléctrico / Híbrido</option>
-          <option value="0.10">Motocicleta / Compartir Auto (Carpooling)</option>
-          <option value="0.20">Vehículo Particular a Gasolina (Solo)</option>
-        </select>
-      </div>
-      <div class="input-group">
-        <div class="input-label"><span>Distancia del trayecto (ida)</span> <span class="val-display"><span id="mov-km-val">0</span> km</span></div>
-        <input type="range" id="mov-km" class="calc-input" min="0" max="60" step="1" value="0">
-      </div>
-      <div class="input-group">
-        <div class="input-label"><span>Días de rutina por semana</span> <span class="val-display"><span id="mov-days-val">0</span> días</span></div>
-        <input type="range" id="mov-days" class="calc-input" min="0" max="7" step="1" value="0">
-      </div>
-      <div class="input-group">
-        <div class="input-label">Viajes largos / Vuelos al año</div>
-        <select id="mov-travel" class="calc-input">
-          <option value="0" selected>-- Seleccionar --</option>
-          <option value="0">Casi nunca salgo de la ciudad</option>
-          <option value="15">Autobús interurbano (varias veces al año)</option>
-          <option value="50">Vuelos domésticos cortos (1-2 veces)</option>
-          <option value="120">Vuelos internacionales frecuentes</option>
-        </select>
-      </div>
-    </section>
-
-    <section class="module-card">
-      <div class="module-header">
-        <span class="module-icon">🥩</span>
-        <h2 class="module-title">Alimentación</h2>
-      </div>
-      <div class="input-group">
-        <div class="input-label"><span>Carne Roja (Res/Cordero)</span> <span class="val-display"><span id="ali-beef-val">0</span> veces/semana</span></div>
-        <input type="range" id="ali-beef" class="calc-input" min="0" max="14" step="1" value="0">
-      </div>
-      <div class="input-group">
-        <div class="input-label"><span>Pollo / Cerdo / Pescado</span> <span class="val-display"><span id="ali-chicken-val">0</span> veces/semana</span></div>
-        <input type="range" id="ali-chicken" class="calc-input" min="0" max="14" step="1" value="0">
-      </div>
-      <div class="input-group">
-        <div class="input-label">Consumo de Lácteos y Quesos</div>
-        <select id="ali-dairy" class="calc-input">
-          <option value="0" selected>-- Seleccionar --</option>
-          <option value="0">Vegano / Alternativas vegetales</option>
-          <option value="8">Consumo moderado (A veces)</option>
-          <option value="20">Alto consumo diario (Mucha leche y queso)</option>
-        </select>
-      </div>
-      <div class="input-group">
-        <div class="input-label">Desperdicio de comida</div>
-        <select id="ali-waste" class="calc-input">
-          <option value="0" selected>-- Seleccionar --</option>
-          <option value="0">Nunca tiro comida / Aprovecho todo</option>
-          <option value="5">Ocasionalmente dejo sobras</option>
-          <option value="15">Frecuentemente desecho comida dañada</option>
-        </select>
+      <div class="module-content">
+        <div class="input-group">
+          <div class="input-label">Medio principal de transporte diario</div>
+          <select id="mov-type" class="calc-input">
+            <option value="0" selected>-- Seleccionar --</option>
+            <option value="0">Caminando / Bicicleta (0 kg)</option>
+            <option value="0.05">Transporte Público (Autobús/Metro)</option>
+            <option value="0.08">Vehículo Eléctrico / Híbrido</option>
+            <option value="0.10">Motocicleta / Compartir Auto (Carpooling)</option>
+            <option value="0.20">Vehículo Particular a Gasolina</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <div class="input-label"><span>Distancia del trayecto (ida)</span> <span class="val-display"><span id="mov-km-val">0</span> km</span></div>
+          <input type="range" id="mov-km" class="calc-input" min="0" max="60" step="1" value="0">
+        </div>
+        <div class="input-group">
+          <div class="input-label"><span>Días de rutina por semana</span> <span class="val-display"><span id="mov-days-val">0</span> días</span></div>
+          <input type="range" id="mov-days" class="calc-input" min="0" max="7" step="1" value="0">
+        </div>
+        <div class="input-group">
+          <div class="input-label">Viajes largos / Vacaciones (Al año)</div>
+          <select id="mov-travel" class="calc-input">
+            <option value="0" selected>-- Seleccionar --</option>
+            <option value="0">Casi nunca salgo de la ciudad</option>
+            <option value="15">Autobús interurbano (Roadtrip compartido)</option>
+            <option value="35">Viaje en Auto Particular (Roadtrip largo)</option>
+            <option value="60">Vuelos domésticos (1-2 veces al año)</option>
+            <option value="150">Vuelos internacionales frecuentes</option>
+          </select>
+        </div>
       </div>
     </section>
 
     <section class="module-card">
-      <div class="module-header">
-        <span class="module-icon">⚡</span>
-        <h2 class="module-title">Energía en el Hogar</h2>
+      <div class="module-header" onclick="toggleCard(this)">
+        <div class="module-header-left">
+          <span class="module-icon">🥩</span>
+          <h2 class="module-title">Alimentación y Dieta</h2>
+        </div>
+        <span class="chevron">▼</span>
       </div>
-      <div class="input-group">
-        <div class="input-label"><span>A/C o Ventiladores potentes</span> <span class="val-display"><span id="ene-ac-val">0</span> hrs/día</span></div>
-        <input type="range" id="ene-ac" class="calc-input" min="0" max="24" step="1" value="0">
-      </div>
-      <div class="input-group">
-        <div class="input-label">Lavado y Secado de Ropa</div>
-        <select id="ene-laundry" class="calc-input">
-          <option value="0" selected>-- Seleccionar --</option>
-          <option value="2">Lavadora y secado al sol (Aire libre)</option>
-          <option value="15">Uso constante de Lavadora y Secadora Térmica</option>
-        </select>
-      </div>
-      <div class="input-group">
-        <div class="input-label">Iluminación Principal</div>
-        <select id="ene-light" class="calc-input">
-          <option value="0" selected>-- Seleccionar --</option>
-          <option value="2">100% Bombillos LED / Mucha luz natural</option>
-          <option value="10">Bombillos tradicionales / Mixto</option>
-        </select>
-      </div>
-      <div class="input-group">
-        <div class="input-label"><span>Personas con las que vives</span> <span class="val-display"><span id="ene-roommates-val">1</span> pers.</span></div>
-        <input type="range" id="ene-roommates" class="calc-input" min="1" max="6" step="1" value="1">
-      </div>
-    </section>
-
-    <section class="module-card">
-      <div class="module-header">
-        <span class="module-icon">♻️</span>
-        <h2 class="module-title">Consumo y Residuos</h2>
-      </div>
-      <div class="input-group">
-        <div class="input-label"><span>Botellas plásticas compradas</span> <span class="val-display"><span id="con-plastic-val">0</span> / semana</span></div>
-        <input type="range" id="con-plastic" class="calc-input" min="0" max="20" step="1" value="0">
-      </div>
-      <div class="input-group">
-        <div class="input-label">Frecuencia de compra de ropa</div>
-        <select id="con-fashion" class="calc-input">
-          <option value="0" selected>-- Seleccionar --</option>
-          <option value="2">Rara vez / Compro de Segunda Mano</option>
-          <option value="10">Ocasional (Solo ropa necesaria)</option>
-          <option value="30">Fast Fashion (Sigo las tendencias seguido)</option>
-        </select>
-      </div>
-      <div class="input-group">
-        <div class="input-label">Hábitos de reciclaje</div>
-        <select id="con-recycle" class="calc-input">
-          <option value="0" selected>-- Seleccionar --</option>
-          <option value="0">Tiro todo en la misma bolsa</option>
-          <option value="-5">Separo a veces (Plástico/Papel)</option>
-          <option value="-15">Separo todo meticulosamente (Bono verde)</option>
-        </select>
-      </div>
-      <div class="input-group">
-        <div class="input-label">Compostaje Orgánico</div>
-        <select id="con-compost" class="calc-input">
-          <option value="0" selected>-- Seleccionar --</option>
-          <option value="0">No hago compostaje</option>
-          <option value="-10">Hago compost con mis restos orgánicos (Bono verde)</option>
-        </select>
+      <div class="module-content">
+        <div class="input-group">
+          <div class="input-label"><span>Carne Roja (Res/Cordero)</span> <span class="val-display"><span id="ali-beef-val">0</span> veces/sem</span></div>
+          <input type="range" id="ali-beef" class="calc-input" min="0" max="14" step="1" value="0">
+        </div>
+        <div class="input-group">
+          <div class="input-label"><span>Carnes Blancas (Pollo/Pescado)</span> <span class="val-display"><span id="ali-chicken-val">0</span> veces/sem</span></div>
+          <input type="range" id="ali-chicken" class="calc-input" min="0" max="14" step="1" value="0">
+        </div>
+        <div class="input-group">
+          <div class="input-label">Consumo de Lácteos y Quesos</div>
+          <select id="ali-dairy" class="calc-input">
+            <option value="0" selected>-- Seleccionar --</option>
+            <option value="0">Vegano / Alternativas vegetales</option>
+            <option value="8">Consumo moderado (A veces)</option>
+            <option value="20">Alto consumo diario (Mucha leche y queso)</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <div class="input-label">Fuente de cocción en casa</div>
+          <select id="ali-cook" class="calc-input">
+            <option value="0" selected>-- Seleccionar --</option>
+            <option value="5">Gas Directo / Bombona</option>
+            <option value="15">Cocina Eléctrica</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <div class="input-label">Origen y Envase de tus alimentos</div>
+          <select id="ali-pack" class="calc-input">
+            <option value="0" selected>-- Seleccionar --</option>
+            <option value="0">Compro fresco y local (Mercados)</option>
+            <option value="10">Mixto</option>
+            <option value="25">Mucha comida ultra-procesada, importada y empacada</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <div class="input-label">Desperdicio de comida</div>
+          <select id="ali-waste" class="calc-input">
+            <option value="0" selected>-- Seleccionar --</option>
+            <option value="0">Nunca tiro comida / Aprovecho todo</option>
+            <option value="5">Ocasionalmente dejo sobras</option>
+            <option value="15">Frecuentemente desecho comida dañada</option>
+          </select>
+        </div>
       </div>
     </section>
 
     <section class="module-card">
-      <div class="module-header">
-        <span class="module-icon">📱</span>
-        <h2 class="module-title">Huella Digital</h2>
+      <div class="module-header" onclick="toggleCard(this)">
+        <div class="module-header-left">
+          <span class="module-icon">⚡</span>
+          <h2 class="module-title">Energía y Electrodomésticos</h2>
+        </div>
+        <span class="chevron">▼</span>
       </div>
-      <div class="input-group">
-        <div class="input-label"><span>Streaming (Netflix, TikTok)</span> <span class="val-display"><span id="dig-stream-val">0</span> hrs/día</span></div>
-        <input type="range" id="dig-stream" class="calc-input" min="0" max="12" step="1" value="0">
-      </div>
-      <div class="input-group">
-        <div class="input-label">Videollamadas / Clases Online</div>
-        <select id="dig-video" class="calc-input">
-          <option value="0" selected>-- Seleccionar --</option>
-          <option value="2">Casi siempre con la cámara apagada (Audio)</option>
-          <option value="8">Uso moderado con cámara encendida</option>
-          <option value="15">Muchas horas diarias con cámara HD</option>
-        </select>
-      </div>
-      <div class="input-group">
-        <div class="input-label">Gestión de Computadora</div>
-        <select id="dig-pc" class="calc-input">
-          <option value="0" selected>-- Seleccionar --</option>
-          <option value="0">La apago siempre tras usarla</option>
-          <option value="5">Suele quedar en suspensión/stand-by</option>
-          <option value="12">Encendida día y noche</option>
-        </select>
+      <div class="module-content">
+        <div class="input-group">
+          <div class="input-label"><span>A/C o Ventiladores potentes</span> <span class="val-display"><span id="ene-ac-val">0</span> hrs/día</span></div>
+          <input type="range" id="ene-ac" class="calc-input" min="0" max="24" step="1" value="0">
+        </div>
+        <div class="input-group">
+          <div class="input-label">Agua caliente (Calentador)</div>
+          <select id="ene-shower" class="calc-input">
+            <option value="0" selected>-- Seleccionar --</option>
+            <option value="0">Uso agua a temperatura ambiente</option>
+            <option value="5">Calentador a gas</option>
+            <option value="15">Calentador eléctrico</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <div class="input-label">Lavado y Secado de Ropa</div>
+          <select id="ene-laundry" class="calc-input">
+            <option value="0" selected>-- Seleccionar --</option>
+            <option value="2">Lavadora y secado al sol (Aire libre)</option>
+            <option value="15">Uso constante de Lavadora y Secadora Térmica</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <div class="input-label">Iluminación Principal</div>
+          <select id="ene-light" class="calc-input">
+            <option value="0" selected>-- Seleccionar --</option>
+            <option value="2">100% Bombillos LED / Mucha luz natural</option>
+            <option value="10">Bombillos tradicionales / Mixto</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <div class="input-label">Estado de la Nevera / Refrigerador</div>
+          <select id="ene-fridge" class="calc-input">
+            <option value="0" selected>-- Seleccionar --</option>
+            <option value="5">Moderna (Eficiencia Inverter / A+)</option>
+            <option value="15">Promedio (Más de 5 años)</option>
+            <option value="30">Muy antigua (Motor hace mucho ruido / gasta mucho)</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <div class="input-label">Vampiros Eléctricos</div>
+          <select id="ene-vampire" class="calc-input">
+            <option value="0" selected>-- Seleccionar --</option>
+            <option value="0">Desconecto todo lo que no uso</option>
+            <option value="8">Dejo cargadores, TV y microondas siempre enchufados</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <div class="input-label"><span>Personas con las que vives</span> <span class="val-display"><span id="ene-roommates-val">1</span> pers.</span></div>
+          <input type="range" id="ene-roommates" class="calc-input" min="1" max="6" step="1" value="1">
+        </div>
       </div>
     </section>
 
     <section class="module-card">
-      <div class="module-header">
-        <span class="module-icon">🏢</span>
-        <h2 class="module-title">Estudio y Trabajo</h2>
+      <div class="module-header" onclick="toggleCard(this)">
+        <div class="module-header-left">
+          <span class="module-icon">♻️</span>
+          <h2 class="module-title">Consumo y Residuos</h2>
+        </div>
+        <span class="chevron">▼</span>
       </div>
-      <div class="input-group">
-        <div class="input-label">Materiales y Documentos</div>
-        <select id="work-paper" class="calc-input">
-          <option value="0" selected>-- Seleccionar --</option>
-          <option value="0">100% Digital (Pantallas, PDFs, Nube)</option>
-          <option value="5">Mixto (Imprimo solo lo necesario)</option>
-          <option value="15">Imprimo mucho / Libros físicos nuevos</option>
-        </select>
+      <div class="module-content">
+        <div class="input-group">
+          <div class="input-label"><span>Botellas plásticas compradas</span> <span class="val-display"><span id="con-plastic-val">0</span> / sem</span></div>
+          <input type="range" id="con-plastic" class="calc-input" min="0" max="20" step="1" value="0">
+        </div>
+        <div class="input-group">
+          <div class="input-label">Frecuencia de compra de ropa</div>
+          <select id="con-fashion" class="calc-input">
+            <option value="0" selected>-- Seleccionar --</option>
+            <option value="2">Rara vez / Compro de Segunda Mano</option>
+            <option value="10">Ocasional (Solo ropa necesaria)</option>
+            <option value="30">Fast Fashion (Sigo las tendencias seguido)</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <div class="input-label">Bolsas en el Supermercado</div>
+          <select id="con-bags" class="calc-input">
+            <option value="0" selected>-- Seleccionar --</option>
+            <option value="-5">Llevo siempre mis bolsas ecológicas de tela</option>
+            <option value="5">A veces compro bolsas plásticas</option>
+            <option value="15">Siempre pido bolsas plásticas nuevas</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <div class="input-label">Hábitos de reciclaje</div>
+          <select id="con-recycle" class="calc-input">
+            <option value="0" selected>-- Seleccionar --</option>
+            <option value="0">Tiro todo en la misma bolsa</option>
+            <option value="-5">Separo a veces (Plástico/Papel)</option>
+            <option value="-15">Separo todo meticulosamente (Bono verde)</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <div class="input-label">Compostaje Orgánico</div>
+          <select id="con-compost" class="calc-input">
+            <option value="0" selected>-- Seleccionar --</option>
+            <option value="0">No hago compostaje</option>
+            <option value="-10">Hago compost con mis restos orgánicos (Bono verde)</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <div class="input-label">Gestión de E-waste (Aparatos rotos)</div>
+          <select id="con-ewaste" class="calc-input">
+            <option value="0" selected>-- Seleccionar --</option>
+            <option value="-5">Los llevo a centros de reciclaje especial</option>
+            <option value="10">Los guardo en un cajón eternamente</option>
+            <option value="25">Los tiro a la basura común</option>
+          </select>
+        </div>
       </div>
-      <div class="input-group">
-        <div class="input-label">Almuerzo en la jornada</div>
-        <select id="work-food" class="calc-input">
+    </section>
+
+    <section class="module-card">
+      <div class="module-header" onclick="toggleCard(this)">
+        <div class="module-header-left">
+          <span class="module-icon">📱</span>
+          <h2 class="module-title">Huella Digital y Tech</h2>
+        </div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="module-content">
+        <div class="input-group">
+          <div class="input-label"><span>Streaming de Video HD</span> <span class="val-display"><span id="dig-stream-val">0</span> hrs/día</span></div>
+          <input type="range" id="dig-stream" class="calc-input" min="0" max="12" step="1" value="0">
+        </div>
+        <div class="input-group">
+          <div class="input-label">Videollamadas / Clases Online</div>
+          <select id="dig-video" class="calc-input">
+            <option value="0" selected>-- Seleccionar --</option>
+            <option value="2">Casi siempre con la cámara apagada (Audio)</option>
+            <option value="8">Uso moderado con cámara encendida</option>
+            <option value="15">Muchas horas diarias con cámara HD</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <div class="input-label">Uso de Inteligencia Artificial (ChatGPT, Midjourney)</div>
+          <select id="dig-ai" class="calc-input">
+            <option value="0" selected>-- Seleccionar --</option>
+            <option value="1">Casi no la uso</option>
+            <option value="5">Uso diario de texto (Consultas simples)</option>
+            <option value="15">Generación intensiva de imágenes/videos por IA</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <div class="input-label">Gestión de Computadora</div>
+          <select id="dig-pc" class="calc-input">
+            <option value="0" selected>-- Seleccionar --</option>
+            <option value="0">La apago siempre tras usarla</option>
+            <option value="5">Suele quedar en suspensión/stand-by</option>
+            <option value="12">Encendida día y noche</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <div class="input-label">Higiene en la Nube / Gaming</div>
+          <select id="dig-cloud" class="calc-input">
+            <option value="0" selected>-- Seleccionar --</option>
+            <option value="0">Borro correos viejos y vacío mi nube regularmente</option>
+            <option value="5">Acumulo miles de correos y gigas de fotos</option>
+            <option value="10">Gamer intenso / Mucho uso de la nube</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <section class="module-card">
+      <div class="module-header" onclick="toggleCard(this)">
+        <div class="module-header-left">
+          <span class="module-icon">🌱</span>
+          <h2 class="module-title">Rutina y Estilo de Vida</h2>
+        </div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="module-content">
+        <div class="input-group">
+          <div class="input-label">Materiales de Estudio / Oficina</div>
+          <select id="life-paper" class="calc-input">
+            <option value="0" selected>-- Seleccionar --</option>
+            <option value="0">100% Digital (Pantallas, PDFs, Nube)</option>
+            <option value="5">Mixto (Imprimo solo lo necesario)</option>
+            <option value="15">Imprimo mucho / Uso mucho papel</option>
+          </select>
+        </div>
+        <div class="input-label">Almuerzo en la jornada (Universidad/Trabajo)</div>
+        <select id="life-food" class="calc-input" style="margin-bottom: 20px;">
           <option value="0" selected>-- Seleccionar --</option>
           <option value="0">Llevo mi propia vianda (Tupperware reutilizable)</option>
           <option value="5">Comedor institucional con platos lavables</option>
           <option value="15">Comida rápida / Delivery (Empaques desechables)</option>
         </select>
-      </div>
-      <div class="input-group">
-        <div class="input-label">Café y Bebidas calientes</div>
-        <select id="work-coffee" class="calc-input">
-          <option value="0" selected>-- Seleccionar --</option>
-          <option value="0">Uso mi propio termo o taza de cerámica</option>
-          <option value="5">1 a 2 vasos desechables por semana</option>
-          <option value="12">Compro café diario en vasos de cartón/plástico</option>
-        </select>
-      </div>
-      <div class="input-group">
-        <div class="input-label">Movilidad en el edificio</div>
-        <select id="work-elevator" class="calc-input">
-          <option value="0" selected>-- Seleccionar --</option>
-          <option value="0">Uso principalmente las escaleras</option>
-          <option value="8">Uso el ascensor todos los días</option>
-        </select>
+        <div class="input-group">
+          <div class="input-label">Café y Bebidas en la calle</div>
+          <select id="life-coffee" class="calc-input">
+            <option value="0" selected>-- Seleccionar --</option>
+            <option value="0">Uso mi propio termo o pido en taza de cerámica</option>
+            <option value="10">Compro en vasos desechables regularmente</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <div class="input-label">Mascotas en casa</div>
+          <select id="life-pets" class="calc-input">
+            <option value="0" selected>-- Seleccionar --</option>
+            <option value="0">Sin mascotas / Mascota pequeña (Aves/Roedores)</option>
+            <option value="15">Gato o Perro pequeño (Dieta estándar)</option>
+            <option value="35">Perro grande (Alta huella de carbono por carne)</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <div class="input-label">Uso del agua (Cepillarse, fregar platos)</div>
+          <select id="life-water" class="calc-input">
+            <option value="0" selected>-- Seleccionar --</option>
+            <option value="0">Cierro el grifo siempre que no uso el agua</option>
+            <option value="8">Dejo el agua correr mientras me cepillo o enjabono</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <div class="input-label">Ascensor vs Escaleras</div>
+          <select id="life-elevator" class="calc-input">
+            <option value="0" selected>-- Seleccionar --</option>
+            <option value="0">Subo por escaleras casi siempre</option>
+            <option value="5">Uso el ascensor diariamente (Incluso pocos pisos)</option>
+          </select>
+        </div>
       </div>
     </section>
 
   </main>
 
   <script>
+    // 手风琴折叠逻辑
+    function toggleCard(headerElement) {
+      const card = headerElement.parentElement;
+      const content = card.querySelector('.module-content');
+      const chevron = card.querySelector('.chevron');
+      
+      if (content.style.display === "block") {
+        content.style.display = "none";
+        chevron.style.transform = "rotate(0deg)";
+      } else {
+        content.style.display = "block";
+        chevron.style.transform = "rotate(180deg)";
+      }
+    }
+
     // 弹窗控制
     const modal = document.getElementById('info-modal');
     function openModal() { modal.classList.add('active'); document.body.style.overflow = 'hidden'; }
     function closeModal() { modal.classList.remove('active'); document.body.style.overflow = 'auto'; }
     window.onclick = function(event) { if (event.target === modal) closeModal(); }
 
-    // 滑块同步显示
+    // 滑块数值同步显示
     document.querySelectorAll('input[type="range"]').forEach(slider => {
       slider.addEventListener('input', (e) => {
         document.getElementById(e.target.id + '-val').innerText = e.target.value;
       });
     });
 
-    // 核心算法监听
+    // 获取数值的辅助函数
     const getVal = (id) => parseFloat(document.getElementById(id).value) || 0;
     
     document.querySelectorAll('.calc-input').forEach(input => {
@@ -380,28 +567,29 @@
       input.addEventListener('change', calculateFootprint);
     });
 
+    // 核心综合算法
     function calculateFootprint() {
       // 1. Movilidad
       let movType = getVal('mov-type');
       let movTotal = (getVal('mov-km') * 2 * getVal('mov-days') * 4.33 * movType) + getVal('mov-travel');
 
       // 2. Alimentación
-      let aliTotal = (getVal('ali-beef') * 4.33 * 3) + (getVal('ali-chicken') * 4.33 * 0.8) + getVal('ali-dairy') + getVal('ali-waste');
+      let aliTotal = (getVal('ali-beef') * 4.33 * 3) + (getVal('ali-chicken') * 4.33 * 0.8) + getVal('ali-dairy') + getVal('ali-cook') + getVal('ali-pack') + getVal('ali-waste');
       
-      // 3. Energía (除以同住人数，加入洗护和照明)
-      let eneTotal = ((getVal('ene-ac') * 12) + getVal('ene-laundry') + getVal('ene-light')) / Math.max(1, getVal('ene-roommates'));
+      // 3. Energía
+      let eneTotal = ((getVal('ene-ac') * 12) + getVal('ene-shower') + getVal('ene-laundry') + getVal('ene-light') + getVal('ene-fridge') + getVal('ene-vampire')) / Math.max(1, getVal('ene-roommates'));
       
-      // 4. Consumo (支持负数抵消)
-      let conTotal = (getVal('con-plastic') * 4.33 * 0.1) + getVal('con-fashion') + getVal('con-recycle') + getVal('con-compost');
+      // 4. Consumo
+      let conTotal = (getVal('con-plastic') * 4.33 * 0.1) + getVal('con-fashion') + getVal('con-bags') + getVal('con-recycle') + getVal('con-compost') + getVal('con-ewaste');
       
       // 5. Digital
-      let digTotal = (getVal('dig-stream') * 1.5) + getVal('dig-video') + getVal('dig-pc');
+      let digTotal = (getVal('dig-stream') * 1.5) + getVal('dig-video') + getVal('dig-ai') + getVal('dig-pc') + getVal('dig-cloud');
       
-      // 6. Estudio y Trabajo
-      let workTotal = getVal('work-paper') + getVal('work-food') + getVal('work-coffee') + getVal('work-elevator');
+      // 6. Rutina y Estilo de Vida
+      let lifeTotal = getVal('life-paper') + getVal('life-food') + getVal('life-coffee') + getVal('life-pets') + getVal('life-water') + getVal('life-elevator');
 
-      // 汇总总分 (Math.max 防止因为极度环保抵消导致出现负数)
-      let grandTotal = Math.max(0, Math.round(movTotal + aliTotal + eneTotal + conTotal + digTotal + workTotal));
+      // 汇总总分
+      let grandTotal = Math.max(0, Math.round(movTotal + aliTotal + eneTotal + conTotal + digTotal + lifeTotal));
       
       updateMonitor(grandTotal);
     }
@@ -415,19 +603,19 @@
       animateValue(scoreElement, currentScore, score, 300);
 
       let color, status, width;
-      // 动态评级阈值调整：因为项目增多，标准放宽至 200 和 400
-      if (score < 200) {
+      // 阈值自适应 (考虑到满分可能突破1000)
+      if (score < 300) {
         color = 'var(--c-green)';
         status = '💚 Eco-Héroe (Excelente)';
-        width = Math.min((score / 600) * 100, 33);
-      } else if (score < 400) {
+        width = Math.min((score / 1000) * 100, 33);
+      } else if (score < 600) {
         color = 'var(--c-yellow)';
         status = '⚖️ Promedio (Puede mejorar)';
-        width = Math.min((score / 600) * 100, 66);
+        width = Math.min((score / 1000) * 100, 66);
       } else {
         color = 'var(--c-red)';
         status = '⚠️ Alerta Ecológica (Alto)';
-        width = Math.min((score / 600) * 100, 100);
+        width = Math.min((score / 1000) * 100, 100);
       }
 
       scoreElement.style.color = color;
@@ -450,7 +638,6 @@
       window.requestAnimationFrame(step);
     }
 
-    // 页面加载触发一次 0 分计算
     window.onload = calculateFootprint;
   </script>
 </body>

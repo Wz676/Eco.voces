@@ -149,3 +149,37 @@
       </div>
     </div>
   </div>
+
+  <h2 style="color: var(--c-blue); font-size: 1.5rem;">Metodología LCA Completa</h2>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">Modelado detallado de tu impacto ambiental.</p>
+      </div>
+      <div class="modal-body">
+        <p style="margin-bottom: 15px;">Evaluamos tu huella de carbono utilizando múltiples factores de emisión científica. Las opciones en blanco ("-- Seleccionar --") asumen un impacto neutral (0).</p>
+        
+        <div class="info-section">
+          <h3>🚗 Movilidad</h3>
+          <p style="font-size: 0.9rem;">Calculamos tu viaje diario y los viajes interurbanos. El Carpooling o usar transporte público reduce las emisiones drásticamente frente al vehículo privado.</p>
+        </div>
+        <div class="info-section">
+          <h3>🥩 Alimentación</h3>
+          <p style="font-size: 0.9rem;">Incluye el tipo de carne, consumo de lácteos, desperdicio de comida y si usas cocina eléctrica o a gas (cada uno con un factor de emisión distinto).</p>
+        </div>
+        <div class="info-section">
+          <h3>⚡ Energía en el Hogar</h3>
+          <p style="font-size: 0.9rem;">El A/C, lavadoras, calentadores de agua y refrigeradores viejos son los mayores consumidores. Aplicamos la regla de "Roommates" para dividir el impacto si vives acompañado.</p>
+        </div>
+        <div class="info-section">
+          <h3>♻️ Consumo y Residuos</h3>
+          <p style="font-size: 0.9rem;">Comprar fast fashion o bolsas plásticas suma emisiones. Separar la basura, reciclar E-waste y hacer compostaje otorgan <strong>bonos verdes (números negativos)</strong>.</p>
+        </div>
+        <div class="info-section">
+          <h3>📱 Huella Digital</h3>
+          <p style="font-size: 0.9rem;">El streaming, videollamadas con cámara, servidores en la nube y el uso de Inteligencia Artificial requieren enormes centros de datos y refrigeración constante.</p>
+        </div>
+        <div class="info-section">
+          <h3>🌱 Rutina y Estilo de Vida</h3>
+          <p style="font-size: 0.9rem;">Desde los empaques de tu almuerzo, el uso de papel en el trabajo/estudio, hasta el impacto de mascotas grandes y el uso de ascensores en tu rutina diaria.</p>
+        </div>
+      </div>
+    </div>
+  </div>
