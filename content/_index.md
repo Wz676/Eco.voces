@@ -29,7 +29,7 @@ No solo hablamos de ecología; aplicamos el pensamiento estructurado para resolv
 
 <h2 id="video" style="text-align: center; margin-top: 5rem; margin-bottom: 2rem; font-size: 2.5rem;">Galería Multimedia</h2>
 
-{{< youtubegallery ids="MkR,Krvmw2WwI,FokO5aTAk" >}}
+{{< youtubegallery ids="-URINdk__hw,5ygiF6_UBDM" >}}
 
 </div>
 
